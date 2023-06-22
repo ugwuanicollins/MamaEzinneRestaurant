@@ -1,0 +1,57 @@
+﻿@model Core.ViewModels.LoginViewModel
+
+@{
+    ViewBag.Title = "User Login";
+    Layout = "~/Views/Shared/_AccountLayout.cshtml";
+}
+<div class="container vh-40" style="border-radius: 90px; background-color: red;border: 4px solid black;align-items: center;justify-content: center;margin-top: 140px; width: 550px;">
+    <div class="card " style="border-radius: 90px;">
+        <div class="card-body text-center align-center gy-3 vh-40">
+            <section class="signUp">
+                <img src="~/images/fork.png" style="width: 60px;height: 60px;">
+                <div class="login-content">
+                    <form method="post" asp-action="Login">
+                        <div asp-validation-summary="All" class="text-danger"></div>
+                        <h2 class="mb-4" style="font-weight: bold;font-family: monserrat;font-size: 30px;color: black;">Mama Ezinne Restaurant</h2>
+
+                        <div class="form-group mb-3 d-flex flex-row align-items-center">
+                            <input type="email" asp-for="Email" style="font-weight: bold;font-size: 15px;" class="form-control" placeholder="Enter Email" />
+                            <span asp-Validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3 d-flex flex-row align-items-center">
+                            <input type="password" asp-for="Password" style="font-weight: bold;font-size: 15px;" class="form-control" placeholder="Enter password" />
+                            <span asp-Validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <input type="submit" value="Login"  asp-action="Login" asp-controller="Account"  class="btn btn-danger text-bold" style="border-radius:90px;background-color: red; height: 3em; width: 90%; color: whitesmoke;"/>                      
+                            </div>
+                    </form>
+                    <p class="Loginhere">
+                        Don't' have an account? <a asp-action="Registration" asp-controller="Account" asp-area="" class="signuphere-link" style="color:blue;">Register</a>
+                    </p>
+                    <div class="text-center">
+                        <button type="button" class="btn btn-white btn-floating mx-1">
+                            <i class="bi bi-facebook" style="color:red;" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="btn btn-white btn-floating mx-1">
+                            <i class="bi bi-google" style="color:red;" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="btn btn-white btn-floating mx-1">
+                            <i class="bi bi-twitter" style="color:red;" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="btn btn-white btn-floating mx-1">
+                            <i class="bi bi-github" style="color:red;" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="btn btn-white btn-floating mx-1">
+                            <i class="bi bi-instagram" style="color:red;" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="btn btn-white btn-floating mx-1">
+                            <i class="bi bi-whatsapp" style="color:red;" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

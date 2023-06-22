@@ -1,0 +1,125 @@
+
+  @import url('https://fonts.googleapis.com/css2?family=PT+Sans:wght@700&family=Poppins:wght@600&display=swap');
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+#backimage {
+    background-image: url('../images/table-2.jpeg');
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+#doc-1 {
+    background-image: url('../images/diet-1.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+#doc-2 {
+    background-image: url('../images/diet-2.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+#doc-3 {
+    background-image: url('../images/events-2.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+#doc-4 {
+    background-image: url('../images/events-1.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+#doc-5 {
+    background-image: url('../images/bbq-1.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+#doc-6 {
+    background-image: url('../images/bb.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+#doc-7 {
+    background-image: url('../images/picnic.jpeg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+#mark {
+    background-image: url('../images/reservation.jpg');
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+#User {
+    background-image: url('../yummy/assets/img/about-2.jpg');
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.addToCartIcon {
+  cursor:pointer;
+}
+.rounded-t-5 {
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+}
+
+.slide-1 {
+    background-image: url('../pic/1916250.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.slide-2 {
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url('../pic/271693.jpg');
+}
+
+.slide-3 {
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url('../pic/271818.jpg');
+}
+
+.slide-4 {
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url('../pic/271722.jpg');
+}
+.slide-5 {
+    background-position: center;
+    background-image: url('../pic/271959.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}

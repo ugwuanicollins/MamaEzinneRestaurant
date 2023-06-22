@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Logic/obj
+/Logic/bin/Debug/net6.0
+/Core/bin/Debug/net6.0
+/Core/obj
+/FoodBar/bin/Debug/net6.0
+/FoodBar/obj

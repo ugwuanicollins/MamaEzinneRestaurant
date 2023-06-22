@@ -1,0 +1,64 @@
+﻿@model Core.Models.Order
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AccountLayout.cshtml";
+}
+
+
+
+
+<div class="container p-3" style="margin-top:80px">
+    <div class="row pt-3">
+        <div class="col-6">
+            <h1 class="text-danger">PaymentDetail</h1>
+        </div>
+    </div>
+
+    <br />
+
+    @if (Model != null)
+    {
+        <div class="text-center jumbotron-fluid">
+            <div class="row gy-2">
+               <div class="card col-lg-6 mt-3">
+                 <div class="card-body" style="font-size:35px">
+                            <h3 id="foodId" hidden></h3>
+                        <h3 id="foodName" style="padding-left:20px;" class=" mb-3 mt-4 "><span style="font-size:30px;font-weight:bold;font-family:monserrat">Name:</span>@Model.FoodName</h3>
+                        <h3 id="amount" style="padding-left:20px;" class="mb-3"><span style="font-size:30px;font-weight:bold;font-family:monserrat">Price:</span>@Model.Amount</h3>
+                        <h3 id="referenceNumber" style="margin-left:20px" class="mb-3"><span style="font-size:30px;font-weight:bold;font-family:monserrat">RefNumber:</span>@Model.ReferenceNumber</h3>
+                        <h3 id="datecreated" style="margin-left:20px" class="mb-3"><span style="font-size:30px;font-weight:bold;font-family:monserrat">Date Paid:</span>@Model.DateCreated.ToString("d")</h3>
+                        <h3 id="status" style="margin-left:20px;" class="mb-3"><span style="font-size:30px;font-weight:bold;font-family:monserrat">Status:</span>  @Model.status</h3>
+                        <h3 id="quantity" style="margin-left:20px;" class="mb-3"><span style="font-size:30px;font-weight:bold;font-family:monserrat">Quantity:</span>  @Model.Quantity</h3>
+                        </div>
+                    </div>
+                
+            </div>
+        </div>
+    }
+    else
+    {
+        <p>No order Exits</p>
+    }
+</div>
+
+
+
+<style>
+    .card {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.8);
+        max-width: 57%;
+        margin: auto;
+        text-align: initial;
+        font-family: monserrat;
+        margin-top: 30px;
+        border-radius: 5rem;
+        border: 1px solid red;
+    }
+
+
+
+</style>
+
+
+        </div>
+    }

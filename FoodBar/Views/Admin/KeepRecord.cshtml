@@ -1,0 +1,169 @@
+﻿@model IEnumerable<Core.ViewModels.SalesRecordViewModel>
+
+
+@{
+
+    ViewData["Title"] = "salesRecordTable";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var selectedFoods = Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.SelectedFoods);
+    var selectedUsers = Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.SelectedUsers);
+}
+
+<div class="container p-2" style="margin-top:150px">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-dark">Sales Record</h2>
+        </div>
+        <div class="col-6 text-end">
+            <a data-toggle="modal" data-target="#modals" class="btn btn-lg btn-danger text-center ml-auto text-white" style="width:35%;border-radius:90px;height:55px;float: right">Add Record</a>
+        </div>
+    </div>
+
+
+
+    <div class="modal" id="modals">
+        <div class="modal-dialog modal-dialog-centered vh-40" style="max-width:40%">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header p-3 bg-danger">
+                    <h4 class="modal-title align-items-center  text-bold text-white" style="margin-left:230px">Add Sales Record</h4>
+                    <button type="button" class="close text-dark" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="col mt-2">
+                            <span style="font-size: 18px;">RECORD DATE</span><input id="datetimeInput" class="form-control" type="date"/>
+                        </div>
+                        <div class="col mb-3">
+                            <span style="font-size: 18px;">NAME</span><select id="selectFoods" onchange="fetchFoodPrice()" class="form-control" disabled></select>
+                        </div>
+                        <div class="col mb-3">
+                            <span style="font-size: 18px;">USER</span><select id="selectUsers" class="form-control" disabled></select>
+                        </div>
+                        <div class="col mb-3">
+                            <span style="font-size: 18px;">PRICE</span><input id="priceFood" onkeyup="calculateTotal()" class="form-control" type="number" disabled />
+                        </div>
+                        <div class="col mb-3">
+                            <span style="font-size: 18px;">QUANTITY</span><input id="quantity" onkeyup="calculateTotal()" class="form-control" type="number" disabled />
+                        </div>
+                        <div class="col mb-3">
+                            <span style="font-size: 18px;">TOTAL</span><input id="total"  class="form-control" type="number" disabled />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btn-lg btn-danger" onclick="SaveSalesRecord()" style="margin-right:280px;border-radius:90px;">Submit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+
+
+    <div class="container-fluid">
+         <div class="row">
+              <div class="col-12">
+                @if (Model != null && Model.Count() > 0)
+                {
+                    <table class="table table-bordered table-striped  table-condensed table-hover">
+                        <thead class="bg-danger text-white">
+                            <tr>
+                                <th class="text-center" scope="col">RecordDate</th>
+                                <th class="text-center" scope="col">UserEmail</th>
+                                <th class="text-center" scope="col">Food</th>
+                                <th class="text-center" scope="col">Price</th>
+                                <th class="text-center" scope="col">Quantity</th>
+                                <th class="text-center" scope="col">Total</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var record in Model)
+                            {
+                                <tr class="text-dark text-center">
+                                    <td>@record.RecordDate.ToString("D")</td>
+                                    <td>@record.UserName</td>
+                                    <td>@record.FoodName</td>
+                                    <td>@record.Price</td>
+                                    <td>@record.Quantity</td>
+                                    <td>@record.Total</td>
+                                </tr>
+                                
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p>No Record Exits</p>
+                }
+
+            </div>
+        </div>
+    </div>
+</>
+
+<style>
+    .modal-backdrop {
+        z-index: 1040 !important; /* Set the desired z-index value */
+        background-color: rgba(0, 0, 0, 0.5) !important; /* Set the desired background color */
+    }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    var datetimeInput = document.getElementById("datetimeInput");
+    debugger;
+datetimeInput.onchange = function () {
+    debugger;
+    var selectedDate = datetimeInput.value;
+    debugger
+    $.ajax({
+        type: 'GET',
+        url: '/Admin/GetOrdersByDataCreated',
+        dataType: 'json',
+        data:
+        {
+            selectedDate: selectedDate
+        },
+        success: function (result) {
+            debugger;
+            if (!result.isError) {
+                debugger;
+                     document.getElementById("selectFoods").disabled = false;
+                     document.getElementById("selectUsers").disabled = false;
+                     document.getElementById("priceFood").disabled = false;
+                     document.getElementById("quantity").disabled = false;
+                     document.getElementById("total").disabled = false;
+                    var selectedFoods = result.foods; /*@Html.Raw(Json.Serialize(ViewBag.SelectedFoods));*/
+                    var selectedFoodInput = $('#selectFoods');
+                     selectedFoodInput.empty();
+                     $.each(selectedFoods, function (index, value) {
+                    selectedFoodInput.append('<option value="' + value.id + '">' + value.name + '</option>');/*append($('<option></option>').text(value));*/
+                });
+
+                var selectedUsers = result.users;
+                debugger;
+                var selectedUsersInput = $('#selectUsers');
+                selectedUsersInput.empty();
+                $.each(selectedUsers, function (index, value) {
+                    selectedUsersInput.append('<option value="' + value.id + '">' + value.userName + '</option>');/*append($('<option></option>').text(value));*/
+                });
+
+                 $('#priceFood').val(result.price);
+            }
+            else {
+                errorAlert(result.msg);
+            }
+        },
+        error: function (ex) {
+
+            errorAlert(ex);
+        }
+    })
+}
+
+</script>

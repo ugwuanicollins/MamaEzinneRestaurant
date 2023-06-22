@@ -1,0 +1,78 @@
+﻿@model Core.ViewModels.FoodViewModel
+@{
+    ViewData["Title"] = "AddFood";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container col d-flex justify-content-center" style="margin-top: 180px; align-items: center;justify-content: center; width: 950px;">
+    <div class="card vh-40  text-center align-center " style="width:950px;border:2px solid black;background-color:lightgray">
+        <div class="card-body text-center align-center gy-3 vh40">
+            <section class="signUp">
+                <form method="post" asp-action="AddFood" asp-controller="Food" enctype="multipart/form-data">
+                    @if (TempData["Message"] != null)
+                    {
+
+                        var tempDatamessage = (FoodBar.Models.Message)TempData["Message"];
+                        <partial name="_Message" model="tempDatamessage" />
+                    }
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <h2 class="mb-5  w-100 text-center text-danger " style="font-weight: bold;font-family: monserrat;font-size: 30px;margin-right:70px">Mama Ezinne Food</h2>
+
+                    <div class="form-group mb-4 row " style="display:flex;margin-right:60px">
+                        <label for="name" class="col-sm-2 col-form-label text-bold text-dark" style="font-weight:bold;">FoodName</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" type="text" name="name" asp-for="Name" >
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-4 row " style="display:flex;margin-right:60px">
+                        <label asp-for="Image" class="col-sm-2 col-form-label text-bold text-dark"  style="font-weight:bold;">Image</label>
+                        <div class="col-sm-10 custom-file">
+                            <input class="form-control " asp-for="ImageUrl"  style="width:100%" type="file" multiple />
+                            <span asp-validation-for="Image" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group mb-4 row " style="display:flex;margin-right:60px">
+                        <label for="price" class="col-sm-2 col-form-label text-bold text-dark" style="font-weight:bold;">Price</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" type="number" name="price" asp-for="Price">
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group mb-4 row " style="display:flex;margin-right:60px">
+                        <label for="message" class="col-sm-2 col-form-label text-bold text-dark" style="font-weight:bold;">Description</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" asp-for="Description" id="message" rows="5" cols="23"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="mb-1  mt-2">
+                        <input type="submit" value="Submit"  class="btn btn-danger text-bold" style="border-radius:90px;background-color: red; height: 3em; width: 50%; color: whitesmoke;margin-left:40px" />
+                    </div>
+                </form>
+
+
+            </section>
+        </div>
+    </div>
+</div>
+                    
+
+    
+@*<script>
+    $(document).ready(function () {
+         $("#multiply").on("change", function () {
+        var fileLabel = $(this).next("labelTag");
+        var files = $(this)[0].files;
+        if(files.length > 1) {
+            fileLabel.html(files.length + "files selected");
+        }
+        else if(files.length == 1){
+           fileLabel.html(files[0].FirstName);
+        }
+
+    })
+ })
+   
+</script>*@
