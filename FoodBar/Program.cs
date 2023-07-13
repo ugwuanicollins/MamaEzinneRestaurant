@@ -56,11 +56,23 @@ app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseRouting();
-
+UpdateDatabase(app);
 app.UseAuthorization();
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+static void UpdateDatabase(IApplicationBuilder app)
+{
+    using (var serviceScope = app.ApplicationServices
+        .GetRequiredService<IServiceScopeFactory>()
+        .CreateScope())
+    {
+        using (var context = serviceScope.ServiceProvider.GetService<AppDbContext>())
+        {
+            context?.Database.Migrate();
+        }
+    }
+}

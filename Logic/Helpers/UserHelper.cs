@@ -60,7 +60,14 @@ namespace Logic.Helpers
                     var newResult = await _userManager.CreateAsync(newAppUser, applicationUserViewModel.password);
                     if (newResult.Succeeded)
                     {
-                        await _userManager.AddToRoleAsync(newAppUser, "User").ConfigureAwait(false);
+                        if (applicationUserViewModel.IsAdmin)
+                        {
+                            await _userManager.AddToRoleAsync(newAppUser, "Admin");
+                        }
+                        else
+                        {
+                            await _userManager.AddToRoleAsync(newAppUser, "User");
+                        }
                         return newAppUser;
                     }
                 }
@@ -81,7 +88,7 @@ namespace Logic.Helpers
         {
             if (userId != null && orderId > 0)
             {
-                var payment = _context.Payments.Where(x=> x.OrderId == orderId && x.UserId == userId && !x.Deleted).FirstOrDefault();
+                var payment = _context.Payments.Where(x=> x.OrderId == orderId && !x.Deleted).FirstOrDefault();
                 if (payment != null)
                 {
                     payment.status = PaymentStatus.Seen;
@@ -101,7 +108,7 @@ namespace Logic.Helpers
                 var order = _context.Orders.Where(o => o.UserId == userId && o.Id == o.Id).FirstOrDefault();
                 if (order != null)
                 {
-                    order.status = PaymentStatus.Seen;
+                    //order.status = PaymentStatus.Seen;
                     order.DateCreated = DateTime.Now;
                     order.Active = true;
                     order.Deleted = false;
@@ -118,7 +125,7 @@ namespace Logic.Helpers
         {
             if (userId != null && orderId > 0)
             {
-                var payment = _context.Payments.Where(x => x.OrderId == orderId && x.UserId == userId && !x.Deleted).FirstOrDefault();
+                var payment = _context.Payments.Where(x => x.OrderId == orderId && !x.Deleted).FirstOrDefault();
                 if (payment != null)
                 {
                     payment.status = PaymentStatus.Declined;
@@ -138,7 +145,7 @@ namespace Logic.Helpers
                 var order = _context.Orders.Where(o => o.UserId == userId && o.Id == o.Id).FirstOrDefault();
                 if (order != null)
                 {
-                    order.status = PaymentStatus.Declined;
+                    //order.status = PaymentStatus.Declined;
                     order.DateCreated = DateTime.Now;
                     order.Active = true;
                     order.Deleted = false;

@@ -19,10 +19,11 @@ namespace Core.ViewModels
         public string? BankName { get; set; }
         public string? ReferenceNumber { get; set; }
         public double AccountNumber { get; set; }
+        public string? OrderDetails { get; set; }
         public DateTime DateCreated { get; set; }
-        public PaymentStatus status { get; set; }
         public string? FoodName { get; set; }
         public IFormFile? EvidenceUrl { get; set; }
+        public string? UserName { get; set; }
         public string? UserId { get; set; }
         [ForeignKey("UserId")]
         public virtual ApplicationUser? User { get; set; }

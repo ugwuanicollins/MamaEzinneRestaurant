@@ -5,61 +5,54 @@
 }
 
 
-<div class="container p-2" style="margin-top:150px">
-    <div class="row pt-4">
-        <div class="col-6">
-            <h2 class="text-dark">Manage Food</h2>
-        </div>
-        <div class="col-6 text-end">
-            <a data-toggle="modal" data-target="#modals" class="btn btn-lg btn-danger text-center ml-auto text-white" style="width:35%;border-radius:90px;height:55px;float: right">Add Food</a>
-        </div>
-    </div>
 
-
-
-    
-    <br />
-
-
-    <div class="container-fluid">
-         <div class="row">
-              <div class="col-12">
+    <div class="container-fluid mb-1 align-items-center" style="width:90%;margin-top:120px">
+        <div class="d-flex justify-content-center row">
+            <div class="col-md-11">
+                <div class="d-flex flex-row align-items-center mt-3 p-2 bg-white rounded">
+                    <div class="col-sm-6 mb-3 mb-m-1 mt-3 ">
+                        <h2 style="font-size:35px">ManageFood</h2>
+                    </div>
+                    <div class="col-sm-6 order-md-2 text-right mt-3">
+                        <a data-toggle="modal" data-target="#modals" class="btn btn-lg btn-danger text-center ml-auto text-white" style="width:35%;border-radius:90px;height:55px;float: right">Add Food</a>
+                    </div>
+                </div>
                 @if (Model.FoodList != null && Model.FoodList.Count() > 0)
                 {
-                    <table class="table table-bordered table-striped  table-condensed table-hover">
-                        <thead class="bg-danger text-white">
-                            <tr>
-                                <th class="text-center" scope="col">Name</th>
-                                <th class="text-center" scope="col">Image</th>
-                                <th class="text-center" scope="col">Price</th>
-                                <th class="text-center" scope="col">Description</th>
-                            </tr>
-                        </thead>
 
-                        <tbody>
-                            @foreach (var food in Model.FoodList)
-                            {
-                                <tr class="text-dark text-center">
-                                    <td>@food.Name</td>
-                                    <td><img alt="" style="width:150px;height:100px" src="@food.Image" /></td>
-                                    <td>@food.Price</td>
-                                    <td>@food.Description</td>
-                                </tr>
-                                
-                            }
-                        </tbody>
-                    </table>
+                    @foreach (var food in Model.FoodList)
+                    {
+                        <div class="d-flex flex-row justify-content-between align-items-center p-4 bg-white mt-3 px-4 rounded">
+
+                            <div class="mr-1"><img class="rounded" src="@food.Image" style="width:100%;height:150px"></div>
+                            <div class="d-flex align-items-center text-center">
+                                <span class="font-weight-bold" style="font-size:28px">@food.Name</span>
+                            </div>
+                            <div class="d-flex align-items-center text-center">
+                            <span class="font-weight-bold" style="font-size:28px">@food.Description</span>
+                           </div>
+                            <div>
+                                <h4 class="text-dark" style="font-size:30px">@food.Price</h4>
+                            </div>
+                            <div class="w-20 btn-group" role="group">
+                                <a class="btn btn-primary mx-2 text-center" data-toggle="modal" data-target="#itemModals" onclick="MapEditFood('@food.Id','@food.Name','@food.Price','@food.Description')">
+                                 <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a class="btn btn-danger text-center" href="#" onclick="DeleteFood('@food.Id')"><i class="bi bi-trash"></i></a>
+                            </div>
+                        </div>
+                    }
+                   
                 }
                 else
                 {
-                    <p>No Record Exits</p>
+                    <p>No Food Exits</p>
                 }
 
             </div>
         </div>
     </div>
 
-</div>
 <div class="modal" id="modals">
     <div class="modal-dialog modal-dialog-centered vh-30" style="max-width:40%">
         <div class="modal-content">
@@ -75,12 +68,6 @@
                 <div class="modal-body">
                     <section class="signUp py-0">
                         <form method="post" asp-action="ManageFood" asp-controller="Admin" enctype="multipart/form-data">
-                            @if (TempData["Message"] != null)
-                            {
-
-                                var tempDatamessage = (FoodBar.Models.Message)TempData["Message"];
-                                <partial name="_Message" model="tempDatamessage" />
-                            }
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <h2 class="mb-2 mt-3  w-100 text-center text-danger " style="font-weight: bold;font-family: monserrat;font-size: 30px;margin-right:70px">Mama Ezinne Food</h2>
 
@@ -113,9 +100,59 @@
                                 </div>
                             </div>
                             <div class="mb-1  mt-2 text-center">
-                                <input type="submit" value="Submit" class="btn btn-danger text-bold" style="border-radius:90px;background-color: red; height: 3em; width: 50%; color: whitesmoke;margin-left:40px" />
+                                <input type="submit" value="Submit" class="btn btn-danger text-bold" style="border-radius:90px;background-color: red; height: 3em; width: 30%; color: whitesmoke;margin-left:20px" />
                             </div>
                         </form>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="edit_food">
+    <div class="modal-dialog modal-dialog-centered vh-30" style="max-width:40%">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header p-3 bg-danger">
+                <h4 class="modal-title align-items-center  text-bold text-white" style="margin-left:45%">Edit Food</h4>
+                <button type="button" class="close text-dark" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="modal-body">
+                    <section class="signUp py-0">
+                            <h2 class="mb-2 mt-3  w-100 text-center text-danger " style="font-weight: bold;font-family: monserrat;font-size: 30px;margin-right:70px">Mama Ezinne Food</h2>
+
+                            <div class="form-group mb-1 mr-0 row " style="display:flex;margin-right:60px">
+                                <label for="name" class="col-sm-12 col-form-label text-bold text-dark" style="font-weight:bold;">FoodName</label>
+                                <div class="col-sm-12">
+                                    <input hidden id="edit_Id">
+                                    <input class="form-control" id="edit_name" type="text" name="name" />
+                                </div>
+                            </div>
+                            <div class="form-group mb-1 mr-0 row " style="display:flex;margin-right:60px">
+                                <label class="col-sm-12 col-form-label text-bold text-dark" style="font-weight:bold;">Image</label>
+                                <div class="col-sm-12 custom-file">
+                                    <input class="form-control " id="edit_image" style="width:100%" type="file" multiple />
+                                </div>
+                            </div>
+                            <div class="form-group mb-1 mr-0 row " style="display:flex;margin-right:60px">
+                                <label for="price" class="col-sm-12 col-form-label text-bold text-dark" style="font-weight:bold;">Price</label>
+                                <div class="col-sm-12">
+                                    <input class="form-control" type="number" id="edit_price" name="price"/>
+                                </div>
+                            </div>
+                            <div class="form-group mb-1 mr-0 row " style="display:flex;margin-right:60px">
+                                <label for="message" class="col-sm-12 col-form-label text-bold text-dark" style="font-weight:bold;">Description</label>
+                                <div class="col-sm-12">
+                                    <textarea class="form-control"  id="edit_description" rows="5" cols="23"></textarea>
+                                </div>
+                            </div>
+                            <div class="mb-1  mt-2 text-center">
+                            <input type="submit" value="Submit" onclick="updateFood()" class="btn btn-danger text-bold" style="border-radius:90px;background-color: red; height: 3em; width: 30%; color: whitesmoke;margin-left:20px" />
+                            </div>
                     </section>
                 </div>
             </div>
@@ -128,6 +165,20 @@
         z-index: 1040 !important; /* Set the desired z-index value */
         background-color: rgba(0, 0, 0, 0.5) !important; /* Set the desired background color */
     }
+
+    body {
+        font-family: 'Manrope', sans-serif;
+        background: #eee;
+    }
+
+    .input-box {
+        width: 80px;
+    }
 </style>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(".close").click(function () {
+        $("#edit_food").modal('hide');
+    });
+    </script>

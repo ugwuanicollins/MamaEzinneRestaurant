@@ -19,5 +19,6 @@ namespace Core.ViewModels
         public string? UserId { get; set; }
         public IFormFile? ImageUrl { get; set; }
         public List<Food> FoodList { get; set; }
+        public List<int> foodIds { get; set; }
     }
 }

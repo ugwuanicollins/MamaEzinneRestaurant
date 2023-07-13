@@ -40,61 +40,51 @@ namespace Logic.Helpers
             int randomNumber = random.Next(100000, 999999);
             return "Order" + randomNumber.ToString();
         }
-        public Order Order(int foodId, string referenceNumber, string accountName, string bankName, string accountNumber, string userName, int quantity,double amount)
+        public Order Order(OrderViewModel orderData)
         {
             try
             {
-                 var user = _userHelper.FindByUserName(userName);   
-                var order = new Order();
-                var food = _context.Foods.Where(h => h.Id == foodId && h.IsActive && !h.IsDeleted).FirstOrDefault();
-                if (food != null && foodId > 0)
+                if (orderData != null)
                 {
+                    var user = _userHelper.FindByUserName(orderData.UserName);
+                    var order = new Order()
+                    {
 
-                    order.UserId = user.Id;
-                    order.FoodName = food.Name;
-                    order.Amount = amount;
-                    order.FoodId = food.Id;
-                    order.Quantity = quantity;
-                    order.ReferenceNumber = referenceNumber;
-                    order.DateCreated = DateTime.Now;
-                    order.AccountName = accountName;
-                    order.BankName = bankName;
-                    order.AccountNumber = accountNumber;
-                    order.Deleted = false;
-                    order.Active = true;
-                    order.status = PaymentStatus.Sent;
-
-
+                        UserId = user.Id,
+                        Amount = orderData.Amount,
+                        ReferenceNumber = GenerateOrderNumber(),
+                        DateCreated = DateTime.Now,
+                        AccountName = "Mama Ezinne Restaurant",
+                        BankName = "Zenith Bank",
+                        AccountNumber = "2553153651",
+                        OrderDetails = orderData.OrderDetails,
+                        Deleted = false,
+                        Active = true
+                    };
 
                     _context.Orders.Add(order);
                     _context.SaveChanges();
                     return order;
+
                 }
                 return null;
             }
             catch (Exception exp)
             {
-
                 throw exp;
-         
-        }   }
+            }   
+        }
 
 
-        public Payment UpdatePaymentTable(int orderId, /*string evidence,*/ string userName)
+        public Payment UpdatePaymentTable(Order order)
         {
             try
             {
                 var payment = new Payment();
-                var order = _context.Orders.Where(p => p.Id == orderId && p.Active && !p.Deleted).Include(x => x.User).FirstOrDefault();
                 if (order != null)
                 {
-                    payment.User = order.User;
-                    payment.Amount = order.Amount;
-                    payment.ReferenceNumber = order.ReferenceNumber;
                     payment.OrderId = order.Id;
-                    //payment.Evidences = evidence;
                     payment.DatePaid = order.DateCreated;
-                    payment.UserId = order.UserId;
                     payment.Active = true;
                     payment.Deleted = false;
                     payment.status = PaymentStatus.pending;

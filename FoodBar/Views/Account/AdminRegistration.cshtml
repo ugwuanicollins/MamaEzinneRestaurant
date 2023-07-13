@@ -1,0 +1,67 @@
+﻿@model Core.ViewModels.RegistrationViewModel
+
+@{
+    ViewData["Title"] = "Register";
+    Layout = "~/Views/Shared/_AccountLayout.cshtml";
+}
+
+<div class="container" style="border-radius: 90px; background-color: red;border: 4px solid black;align-items: center;justify-content: center;margin-top: 110px; width: 550px;">
+    <div class="card " style="border-radius: 90px;">
+        <div class="card-body text-center align-center gy-3 vh-50">
+            <span>@ViewBag.Message </span>
+            <section class="signUp">
+                <img src="~/images/fork.png" style="width: 60px;height: 60px;">
+                <div class="signUp-content">
+                    <form method="post" asp-action="Registration">
+                        @if (TempData["Message"] != null)
+                        {
+
+                            var tempDatamessage = (FoodBar.Models.Message)TempData["Message"];
+                            <partial name="_Message" model="tempDatamessage" />
+                        }
+                        <h2 class="mb-4" style="font-weight: bold;font-family: monserrat;font-size: 30px;color: black;">Create Account</h2>
+
+                        <div class="form-group mb-3 d-flex flex-row align-items-center">
+                            <input type="email" asp-for="Email"  style="font-weight: bold;font-size: 15px;" class="form-control" placeholder="Enter Email" />
+                            <input asp-for="IsAdmin" value="@Model?.IsAdmin" hidden/>
+                        </div>
+
+                        <div class="form-group mb-3 d-flex flex-row align-items-center">
+                            <input type="password" asp-for="password"   style="font-weight: bold;font-size: 15px;" class="form-control" placeholder="Enter password" />
+                        </div>
+
+                        <div class="form-group mb-3 d-flex flex-row align-items-center">
+                            <input type="password" asp-for="Confirmpassword" style="font-weight: bold;font-size: 15px;" class="form-control" placeholder="confirmPassword" />
+                        </div>
+                        <div class="mb-3">
+                            <input type="submit" value="Register" class="btn btn-danger text-bold"  style="border-radius:90px;background-color: red; height: 3em; width: 90%; color: whitesmoke;"/>
+                        </div>
+                    </form>
+                    <p class="Loginhere">
+                            Already have an account? <a asp-action="Login" asp-controller="Account" asp-area="" class="loginhere-link" style="color:blue;">Login</a>
+                    </p>
+                    <div class="text-center">
+                        <button type="button" class="btn btn-white btn-floating mx-1">
+                             <i class="bi bi-facebook" style="color:red;" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="btn btn-white btn-floating mx-1">
+                            <i class="bi bi-google" style="color:red;" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="btn btn-white btn-floating mx-1">
+                           <i class="bi bi-twitter" style="color:red;" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="btn btn-white btn-floating mx-1">
+                           <i class="bi bi-github" style="color:red;" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="btn btn-white btn-floating mx-1">
+                            <i class="bi bi-instagram" style="color:red;" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="btn btn-white btn-floating mx-1">
+                           <i class="bi bi-whatsapp" style="color:red;" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    </div>

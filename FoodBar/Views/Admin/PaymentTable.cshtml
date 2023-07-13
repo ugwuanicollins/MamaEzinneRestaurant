@@ -6,7 +6,7 @@
 }
 
 
-<div class="jumbotron-fluid p-3" style="margin-top:100px">
+@*<div class="jumbotron-fluid p-3" style="margin-top:100px">
     <div class="row pt-4">
         <div class="col-6 mt-3">
             <h2 class="text-danger text-center">Payment Record</h2>
@@ -61,24 +61,67 @@
                 }
 
             </div>
-            <div id="itemModal" class="modal fade" role="dialog">
-                <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
-                    <div class="modal-content">
-                        <div class="modal-header bg-danger">
-                            <h4 class="modal-title align-items-center  text-bold text-white" style=" margin-left:230px;font-size:30px">Payment Details</h4>
+        </div>
+    </div>
+</div>*@
+
+<div class="container-fluid mb-1 align-items-center" style="width:90%;margin-top:150px">
+    <div class="d-flex justify-content-center row">
+        <div class="col-md-11">
+            @if (Model.Count() > 0)
+            {
+                <div class="text-center align-items-center mt-3 bg-white rounded">
+                    <div class="text-center ">
+                        <h2 style="font-size:35px" class="text-danger">Payment Record</h2>
+                    </div>
+                </div>
+                @foreach (var payment in Model)
+                {
+                    <div class="d-flex flex-row justify-content-between align-items-center p-4 bg-white mt-3 px-4 rounded">
+                       @* <div class="d-flex align-items-center text-center">
+                            <h2 class="text-dark" style="font-size:30px">@payment.User.Email</h2>
+                        </div>*@
+                        <div class="d-flex align-items-center text-center">
+                            <h4 class="text-dark" style="font-size:30px">@payment.Orders</h4>
                         </div>
-                        <div class="modal-body" style="font-family:monserrat;font-size:25px;">
-                            <div class="row">
-                            <div class="text-center align-items-center container-fluid">
-                              <img style="height:400px;width:250%" src="" id="imageid" class="img-fluid">
-                            </div>
-                            <div class="col-8">
-                                <p id="usernam"><strong style="font-family:monserrat;font-size:25px;font-weight:bold" class="mt-2">UserName: </strong> <span></span></p>
-                                <p id="modal-item-Amount"><strong style="font-family:monserrat;font-size:25px;font-weight:bold" class="mt-2">Amount: </strong> <span></span></p>
-                                <p id="modal-item-ReferenceNumber" style="font-family:monserrat;font-size:25px;font-weight:bold" class="mt-2"><strong>ReferenceNumber: </strong> <span></span></p>
-                                <p id="modal-item-DatePaid"><strong style="font-family:monserrat;font-size:25px;font-weight:bold" class="mt-2">DatePaid: </strong> <span></span></p>
-                            </div>
-                            </div>
+                        <div class="d-flex align-items-center text-center">
+                            <h5  class="text-dark" style="font-size:30px">@payment.status</h5>
+                        </div>
+                        <div class="d-flex align-items-center text-center">
+                            <h5 class="text-dark" style="font-size:30px">@payment.DatePaid.ToString("D")</h5>
+                        </div>
+                        <div class="d-flex align-items-center text-center">
+                            <img alt="" style="width:200px;height:94px" src="@payment.Evidences" />
+                        </div>
+                        <div class="d-flex align-items-center text-center">
+                            <button class="btn btn-danger text-white mt-2 align-items-center text-center btn-sm details-btn" onclick="viewPayment('@payment.Id')">View</button>
+                        </div>
+                        <div class="d-flex align-items-center text-center" role="group">
+                            <a onclick="ApproveCustomerPayment('@payment.OrderId')" class="btn btn-success mx-2">Approve</a>
+                            <a onclick="DeclineCustomerPayment('@payment.OrderId')" class="btn btn-danger">Decline</a>
+                        </div>
+                    </div>
+                }
+            }
+
+        </div>
+    </div>
+    <div id="itemModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-danger">
+                    <h4 class="modal-title align-items-center  text-bold text-white" style=" margin-left:230px;font-size:30px">Payment Details</h4>
+                </div>
+                <div class="modal-body" style="font-family:monserrat;font-size:25px;">
+                    <div class="row">
+                        <div class="text-center align-items-center container-fluid">
+                            <img style="height:400px;width:250%" src="" id="imageid" class="img-fluid">
+                        </div>
+                        <div class="col-8">
+                            <p id="usernam"><strong style="font-family:monserrat;font-size:25px;font-weight:bold" class="mt-2">UserName: </strong> <span></span></p>
+                            <p id="modal-item-Amount"><strong style="font-family:monserrat;font-size:25px;font-weight:bold" class="mt-2">Amount: </strong> <span></span></p>
+                            <p id="modal-item-ReferenceNumber" style="font-family:monserrat;font-size:25px;font-weight:bold" class="mt-2"><strong>ReferenceNumber: </strong> <span></span></p>
+                            <p id="modal-item-DatePaid"><strong style="font-family:monserrat;font-size:25px;font-weight:bold" class="mt-2">DatePaid: </strong> <span></span></p>
                         </div>
                     </div>
                 </div>
@@ -88,16 +131,11 @@
 </div>
 
 <style>
-    .modal {
-        display: none;
-        position: fixed;
-        left: 0;
-        top: 0;
-        max-width: 200%;
-        min-height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
+    body {
+        font-family: 'Manrope', sans-serif;
+        background: #eee;
     }
-
+     
     .modal-backdrop {
         z-index: 1040 !important; /* Set the desired z-index value */
         background-color: rgba(0, 0, 0, 0.5) !important; /* Set the desired background color */

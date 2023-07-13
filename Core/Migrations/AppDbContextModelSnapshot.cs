@@ -126,14 +126,8 @@ namespace Core.Migrations
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("FoodId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FoodName")
+                    b.Property<string>("OrderDetails")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
 
                     b.Property<string>("ReferenceNumber")
                         .HasColumnType("nvarchar(max)");
@@ -141,12 +135,7 @@ namespace Core.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("status")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("FoodId");
 
                     b.HasIndex("UserId");
 
@@ -164,9 +153,6 @@ namespace Core.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
-                    b.Property<double>("Amount")
-                        .HasColumnType("float");
-
                     b.Property<DateTime>("DatePaid")
                         .HasColumnType("datetime2");
 
@@ -179,20 +165,12 @@ namespace Core.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ReferenceNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("status")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Payments");
                 });
@@ -208,9 +186,6 @@ namespace Core.Migrations
                     b.Property<int?>("FoodId")
                         .HasColumnType("int");
 
-                    b.Property<double>("GrandTotal")
-                        .HasColumnType("float");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -219,6 +194,9 @@ namespace Core.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("int");
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
@@ -232,14 +210,11 @@ namespace Core.Migrations
                     b.Property<double>("Total")
                         .HasColumnType("float");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("FoodId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("OrderId");
 
                     b.ToTable("SalesRecords");
                 });
@@ -518,15 +493,9 @@ namespace Core.Migrations
 
             modelBuilder.Entity("Core.Models.Order", b =>
                 {
-                    b.HasOne("Core.Models.Food", "Foods")
-                        .WithMany()
-                        .HasForeignKey("FoodId");
-
                     b.HasOne("Core.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
-
-                    b.Navigation("Foods");
 
                     b.Navigation("User");
                 });
@@ -539,13 +508,7 @@ namespace Core.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Core.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
                     b.Navigation("Orders");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Core.Models.SalesRecord", b =>
@@ -554,13 +517,13 @@ namespace Core.Migrations
                         .WithMany()
                         .HasForeignKey("FoodId");
 
-                    b.HasOne("Core.Models.ApplicationUser", "User")
+                    b.HasOne("Core.Models.Order", "Order")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("OrderId");
 
                     b.Navigation("Foods");
 
-                    b.Navigation("User");
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

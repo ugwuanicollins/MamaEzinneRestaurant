@@ -38,7 +38,7 @@ namespace Logic.Helpers
         {
             try
             {
-                var processedImageUrl = ProcessFoodImage(foodViewModel);
+                var processedImageUrl = ProcessFoodImage(foodViewModel.ImageUrl);
                 var userId = _userHelper.FindByUserName(user);
                 if (foodViewModel != null && user != null)
                 {
@@ -65,7 +65,7 @@ namespace Logic.Helpers
                 throw exp;
             }
         }
-        public string ProcessFoodImage(FoodViewModel foodViewModel)
+        public string ProcessFoodImage(IFormFile image)
         {
             try
             {
@@ -76,11 +76,11 @@ namespace Logic.Helpers
                 {
                     Directory.CreateDirectory(pathString);
                 }
-                uniqueFileName = Guid.NewGuid().ToString() + "_" + foodViewModel.ImageUrl.FileName;
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + image.FileName;
                 string filePath = Path.Combine(uploadsFolder, uniqueFileName);
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
-                    foodViewModel.ImageUrl.CopyTo(fileStream);
+                    image.CopyTo(fileStream);
                 }
                 return "/pic/" + uniqueFileName;
             }
@@ -97,7 +97,7 @@ namespace Logic.Helpers
             {
                 if (foodId > 0)
                 {
-                    var food = _context.Foods.Where(g => g.Id == foodId && g.IsActive && !g.IsDeleted).FirstOrDefault();
+                    var food = _context.Foods.Where(g => g.Id == foodId).FirstOrDefault();
                     if (food != null)
                     {
                         return food;
@@ -141,31 +141,76 @@ namespace Logic.Helpers
 
         public async Task<SalesRecord> SaveSalesRecord(int foodId, double price, DateTime recordDate,string user, double total, int quantity)
         {
-            if(foodId != 0)
-            {
-                var food = _context.Foods.Where(x => x.Id == foodId && !x.IsDeleted).FirstOrDefault();
-                var salesRecord = new SalesRecord()
-                {
-                    FoodId = foodId,
-                    Price = price,
-                    RecordDate = recordDate,
-                    Name = food?.Name,
-                    UserId = user,
-                    Total = total,
-                    Quantity = quantity,
-                    GrandTotal = total * quantity,
-                    IsActive = true,
-                    IsDeleted = false,
-                };
-                _context.SalesRecords.Add(salesRecord);
-                _context.SaveChanges();
-                return salesRecord;
-            }
+            //if(foodId != 0)
+            //{
+            //    var food = _context.Foods.Where(x => x.Id == foodId && !x.IsDeleted).FirstOrDefault();
+            //    var salesRecord = new SalesRecord()
+            //    {
+            //        FoodId = foodId,
+            //        Price = price,
+            //        RecordDate = recordDate,
+            //        Name = food?.Name,
+            //        UserId = user,
+            //        Total = total,
+            //        Quantity = quantity,
+            //        GrandTotal = total * quantity,
+            //        IsActive = true,
+            //        IsDeleted = false,
+            //    };
+            //    _context.SalesRecords.Add(salesRecord);
+            //    _context.SaveChanges();
+            //    return salesRecord;
+            //}
             return null;
         }
-             
-             
+
+        public bool EditFood(FoodViewModel foodViewModel)
+        {
+            if (foodViewModel != null)
+            {
+                var imgurl = "";
+                if(foodViewModel.ImageUrl != null)
+                {
+                    imgurl = ProcessFoodImage(foodViewModel.ImageUrl);
+                }
+                var getFoodFromDataBase = _context.Foods.Where(f => f.Id == foodViewModel.Id && !f.IsDeleted).FirstOrDefault();
+                if (getFoodFromDataBase != null)
+                {
+                    getFoodFromDataBase.Name = foodViewModel.Name;
+                    getFoodFromDataBase.Price = foodViewModel.Price;
+                    getFoodFromDataBase.Description = foodViewModel.Description;
+
+                    if(imgurl != "")
+                    {
+                        getFoodFromDataBase.Image = imgurl;
+                    }
+
+                    _context.Update(getFoodFromDataBase);
+                    _context.SaveChanges();
+                    return true;
+                }
+            }
+            return false;
         }
+
+        public bool DeleteFood(int id)
+        {
+            if (id > 0)
+            {
+                var deleteFood = _context.Foods.Where(x => x.Id == id && !x.IsDeleted).FirstOrDefault();
+                if (deleteFood != null)
+                {
+                    deleteFood.IsActive = false;
+                    deleteFood.IsDeleted = true;
+                    _context.Foods.Update(deleteFood);
+                    _context.SaveChanges();
+                    return true;
+                }
+            }
+            return false;
+        }
+
+    }
 
 
     }

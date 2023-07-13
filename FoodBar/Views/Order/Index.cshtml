@@ -1,4 +1,4 @@
-﻿@model Core.Models.Order
+﻿@model Core.Models.Payment
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_AccountLayout.cshtml";
@@ -6,59 +6,94 @@
 
 
 
-
-<div class="container p-3" style="margin-top:80px">
-    <div class="row pt-3">
-        <div class="col-6">
-            <h1 class="text-danger">PaymentDetail</h1>
+ <div class="text-center container-fluid" style="margin-top:120px">
+<div class="card col-12 mt-2">
+        <h2 class="mt-3">OrderDetails</h2>
+    <div class="card-body mt-2" style="font-size:30px">
+        <h3 id="payId" hidden></h3>
+        <div class="row">
+            <div class="col-md-6 text-left">
+                <h3>Email: @Model?.Orders?.User?.Email</h3>
+            </div>
+            <div class="col-md-6">
+                <p>OrderRef: @Model?.Orders?.ReferenceNumber</p>
+            </div>
+            <div class="col-md-6 text-left">
+                <p>DatePaid: @Model?.DatePaid.ToShortDateString()</p>
+            </div>
+            <div class="col-md-6">
+                <p>PaymentStatus: @Model?.status</p>
+            </div>
         </div>
+        <table class="table mt-4 table-striped table-condensed table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th width="5%">S/N</th>
+                    <th width="40%">Food</th>
+                    <th width="10%">Qty</th>
+                    <th width="20%">U-Price</th>
+                    <th width="25%">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                    @foreach(var item in Model.Orders.RotaObject)
+                    {
+                        <tr>
+                            <td></td>
+                            <td class="text-left">@item?.Foods?.Name</td>
+                            <td>@item?.Quantity</td>
+                            <td>@item?.UnitPrice</td>
+                            <td>@item?.total</td>
+                        </tr>
+                    }
+                </tbody>
+        </table>
+            <h3 class="text-end">GrandTotal: ₦ @Model.Orders.Amount</h3>
     </div>
+</div>
+</div>    
 
-    <br />
 
-    @if (Model != null)
+<style>
+    .card {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.8);
+        max-width: 55%;
+        font-family: monserrat;
+        border: 1px solid red;
+        margin-left: 20%
+    }
+
+    table {
+        counter-reset: row-counter; 
+    }
+
+    tr > td:first-child:before {
+        counter-increment: row-counter; 
+        content: counter(row-counter); 
+    }
+</style>
+
+  
+
+@* @if (Model != null)
     {
         <div class="text-center jumbotron-fluid">
             <div class="row gy-2">
                <div class="card col-lg-6 mt-3">
                  <div class="card-body" style="font-size:35px">
                             <h3 id="foodId" hidden></h3>
-                        <h3 id="foodName" style="padding-left:20px;" class=" mb-3 mt-4 "><span style="font-size:30px;font-weight:bold;font-family:monserrat">Name:</span>@Model.FoodName</h3>
+                        <h3 id="amount" style="padding-left:20px;" class="mb-3"><span style="font-size:30px;font-weight:bold;font-family:monserrat">OrderDetails:</span>@Model</h3>
                         <h3 id="amount" style="padding-left:20px;" class="mb-3"><span style="font-size:30px;font-weight:bold;font-family:monserrat">Price:</span>@Model.Amount</h3>
                         <h3 id="referenceNumber" style="margin-left:20px" class="mb-3"><span style="font-size:30px;font-weight:bold;font-family:monserrat">RefNumber:</span>@Model.ReferenceNumber</h3>
                         <h3 id="datecreated" style="margin-left:20px" class="mb-3"><span style="font-size:30px;font-weight:bold;font-family:monserrat">Date Paid:</span>@Model.DateCreated.ToString("d")</h3>
-                        <h3 id="status" style="margin-left:20px;" class="mb-3"><span style="font-size:30px;font-weight:bold;font-family:monserrat">Status:</span>  @Model.status</h3>
-                        <h3 id="quantity" style="margin-left:20px;" class="mb-3"><span style="font-size:30px;font-weight:bold;font-family:monserrat">Quantity:</span>  @Model.Quantity</h3>
                         </div>
                     </div>
-                
+
             </div>
         </div>
     }
     else
     {
         <p>No order Exits</p>
-    }
-</div>
+    }*@
 
-
-
-<style>
-    .card {
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.8);
-        max-width: 57%;
-        margin: auto;
-        text-align: initial;
-        font-family: monserrat;
-        margin-top: 30px;
-        border-radius: 5rem;
-        border: 1px solid red;
-    }
-
-
-
-</style>
-
-
-        </div>
-    }

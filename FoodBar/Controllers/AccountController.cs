@@ -44,8 +44,17 @@ namespace FoodBar.Controllers
         [HttpGet]
         public IActionResult Registration()
         {
-
-            return View();
+            var model = new RegistrationViewModel();
+            model.IsAdmin = false;
+            return View(model);
+        }
+        
+        [HttpGet]
+        public IActionResult AdminRegistration()
+        {
+            var model = new RegistrationViewModel();
+            model.IsAdmin = true;
+            return View(model);
         }
 
         //POST
@@ -86,30 +95,37 @@ namespace FoodBar.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var user = await _userHelper.FindByEmailAsync(model.Email).ConfigureAwait(false);
-                var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
-
-                if (result.Succeeded)
+                if (ModelState.IsValid)
                 {
-                    var admin = await _userManager.IsInRoleAsync(user, "Admin").ConfigureAwait(false);
-                    if (admin)
+                    var user = await _userHelper.FindByEmailAsync(model.Email).ConfigureAwait(false);
+                    if (user != null)
                     {
-                        return RedirectToAction("Index", "Admin");
+                        var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
+
+                        if (result.Succeeded)
+                        {
+                            var admin = await _userManager.IsInRoleAsync(user, "Admin").ConfigureAwait(false);
+                            if (admin)
+                            {
+                                return RedirectToAction("Index", "Admin");
+                            }
+                            else
+                            {
+                                return RedirectToAction("Index", "Home");
+                            }
+                        }
                     }
-                    else
-                    {
-                        return RedirectToAction("Index", "Home");
-                    }
-                    
                 }
-            
-                    
-                   
+
+                return View(model);
+            }
+            catch (Exception x)
+            {
+                throw x;
             }
 
-            return View(model);
         }
       
     }

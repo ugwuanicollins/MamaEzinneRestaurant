@@ -18,6 +18,7 @@ namespace Core.ViewModels
         [DataType(DataType.Password)]
         [Display(Name = "Confirm Password")]
         public string? Confirmpassword { get; set; }
+        public bool IsAdmin { get; set; }
 
     }
 }

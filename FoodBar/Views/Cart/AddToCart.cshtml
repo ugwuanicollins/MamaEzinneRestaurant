@@ -1,0 +1,519 @@
+﻿@model List<Core.Models.Food>
+@{
+    ViewData["Title"] = "AddToCart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var itemCount = 0;
+    double summ = 0;
+}
+
+<style>
+    body {
+        counter-reset: Serial; /* / Set the Serial counter to 0 /*/
+    }
+
+    tr td:first-child:before {
+        counter-increment: Serial; /* / Increment the Serial counter /*/
+        content: counter(Serial); /*  / Display the counter /*/
+    }
+</style>
+
+
+
+
+
+
+<div class="container-fluid mb-1 align-items-center" style="width:90%;margin-top:120px">
+    <div class="d-flex justify-content-center row">
+        <div class="col-md-11">
+            @if (Model != null && Model.Count() > 0)
+            {
+                summ = @Model.Sum(x => x.Price);
+                <div class="d-flex flex-row align-items-center mt-3 p-2 bg-white rounded">
+                    <div class="col-sm-6 mb-3 mb-m-1 mt-3 ">
+                        <h2 style="font-size:35px"><span class="bi bi-cart-plus-fill" style="font-size: 35px; color: rgb(0, 0, 0);"></span>Shopping cart</h2>
+                    </div>
+                    <div class="col-sm-6 order-md-2 text-right mt-3">
+                        <a asp-action="Index" asp-controller="Food" class="btn btn-primary mb-2 btn-lg pl-5 text-center pr-5">
+                            <i class="bi bi-arrow-left-short"></i>Continue Shopping
+                        </a>
+                    </div>
+                </div>
+                @foreach (var food in Model)
+                {
+                    itemCount++;
+                    <div id="myDiv_@itemCount" class="d-flex flex-row justify-content-between align-items-center p-4 bg-white mt-3 px-4 rounded">
+                        <input id="fdId_@itemCount" hidden value="@food.Id" />
+                        <div class="mr-1"><img class="rounded" src="@food.Image" style="width:100%;height:150px"></div>
+                        <div class="d-flex align-items-center text-center">
+                            <span class="font-weight-bold" style="font-size:28px">@food.Name</span>
+                        </div>
+                        <div class=" align-items-center">
+                            <button class=" btn-danger" onclick="decreaseValue(@itemCount)">-</button>
+                            <input type="number" id="counterInput_@itemCount" class="text-center input-box" min="1" value="1">
+                            <button class="btn-secondary" onclick="increaseValue(@itemCount)">+</button>
+                        </div>
+                        <div>
+                            <h4 class="text-dark" id="unitPrice_@itemCount" style="font-size:30px">@food.Price</h4>
+                        </div>
+                        <div class="d-flex align-items-center text-center">
+                            <h4 id="total_@itemCount" class="text-dark" style="font-size:30px">@food.Price</h4>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <button class="btn mt-2 btn-remove"><i style="font-size:30px; color:red" class="bi bi-trash-fill" onclick="deleteCart(@itemCount)()"></i></button>
+                            </div>
+                    </div>
+                }
+                <div class="d-flex flex-row align-items-center mt-3 p-2 bg-white rounded">
+                    <div class="col-sm-6 mb-3 mb-m-1 ">
+                        <h4 style="font-size:28px" id="gdtotal">GrandTotal: @summ</h4>
+                    </div>
+                    <div class="col-sm-6 order-md-2 text-right mt-3">
+                        <a onclick="PreviewPaymentDetails()" class="btn btn-danger mb-4 btn-lg pl-5 text-center pr-5">Checkout</a>
+                    </div>
+                </div>
+            }
+            
+        </div>
+    </div>
+    <!-- The Modal -->
+    <div class="modal fade mt-1" id="modals">
+        <div class="modal-dialog" style="max-width:40%;margin-top:100px">
+            <div class="modal-content">
+
+                <!-- Modal body -->
+                <div class="modal-body" style="background-color:whitesmoke">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h3 class="modal-title mb-3 text-center mb-3" style="font-size:50px;font-family:monserrt;color:red">Make Payment</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>AccountName</label>
+                                <input type="text" class="form-control-lg" id="accountNameId" disabled />
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>AccountNumber</label>
+                                <input type="number" id="accountNumberId" class="form-control-lg" disabled />
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Bank Name</label>
+                                <input type="text" class="form-control-lg" id="bankNameId" disabled />
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Amount</label>
+                                <input type="number" id="amount" class="form-control-lg" required disabled />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <a onclick="CreateOrder()" class="btn btn-lg btn-primary" style="margin-right:220px">Confirm Payment</a>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <!-- The Modal -->
+    <div class="modal" id="evidenceModal">
+        <div class="modal-dialog p-3 mt-5" style="max-width:45%">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header p-3 bg-danger">
+                    <h4 class="modal-title align-items-center  text-bold text-white" style="margin-left:210px"> Upload Evidence of Payment</h4>
+                    <button type="button" class="close text-dark" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input class="form-control " id="evidenceId" type="file" />
+                            <a class="btn btn-lg btn-info mt-4" style="margin-left:290px" onclick="GetUploadedEvidence()">Submit</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+
+    body {
+        font-family: 'Manrope', sans-serif;
+        background: lightgray;
+    }
+
+.input-box{
+  width:60px;
+  font-size:20px;
+}
+button{
+    font-size:20px;
+}
+</style>
+
+<script>
+    var numberOfFoods = @itemCount;
+    var gToT = '@Model?.Sum(x => x.Price)';
+    function increaseValue(id) {
+        var result = 0;
+        debugger;
+        var idd = "counterInput_" + id;
+        var iddT = "total_" + id;
+        var iddUP = "unitPrice_" + id;
+        var unitPrice = $('#' + iddUP).text();
+        var qty = 0;
+        var counterInput = document.getElementById(idd);
+        var totalAmt = document.getElementById(iddT);
+        var currentValue = parseInt(counterInput.value);
+        counterInput.value = currentValue + 1;
+        qty = parseInt(counterInput.value);
+        unitPrice = parseInt(unitPrice);
+        totalAmt.innerHTML = (qty * unitPrice);
+
+        for (let i = 1; i < numberOfFoods + 1; i++) {
+            var totId = "total_" + i;
+            var newTotalAmt = document.getElementById(totId);
+            if(newTotalAmt != null){
+                var x = newTotalAmt.innerHTML;
+                x = parseInt(x);
+                result = result + x;
+            }
+        }
+        gToT = result;
+        document.getElementById("gdtotal").innerHTML = "GrandTotal: " + result;
+
+    }
+    
+    function decreaseValue(id) {
+        var result = 0;
+        debugger;
+        var idd = "counterInput_" + id;
+        var iddT = "total_" + id;
+        var iddUP = "unitPrice_" + id;
+        var unitPrice = $('#' + iddUP).text();
+        var qty = 0;
+
+        var counterInput = document.getElementById(idd);
+        var totalAmt = document.getElementById(iddT);
+        var currentValue = parseInt(counterInput.value);
+        if (currentValue > 1) {
+            counterInput.value = currentValue - 1;
+        }
+        qty = parseInt(counterInput.value);
+        unitPrice = parseInt(unitPrice);
+        totalAmt.innerHTML = (qty * unitPrice);
+
+        for (let i = 1; i < numberOfFoods + 1; i++) {
+            var totId = "total_" + i;
+            var newTotalAmt = document.getElementById(totId);
+            if (newTotalAmt != null) {
+                var x = newTotalAmt.innerHTML;
+                x = parseInt(x);
+                result = result + x;
+            }
+        }
+        gToT = result;
+        document.getElementById("gdtotal").innerHTML = "GrandTotal: " + result;
+    }   
+
+    function deleteCart(id){
+        var result = 0; 
+        debugger;
+
+        $('#myDiv_' + id).remove();
+
+        for (let i = 1; i < numberOfFoods + 1; i++) {
+            var totId = "total_" + i;
+            var newTotalAmt = document.getElementById(totId);
+            if (newTotalAmt != null) {
+                var x = newTotalAmt.innerHTML;
+                x = parseInt(x);
+                result = result + x;
+            }
+        }
+        document.getElementById("gdtotal").innerHTML = "GrandTotal: " + result;
+  
+    }
+
+    function PreviewPaymentDetails() {
+        debugger;
+        CollectOrderDetails();
+        $("#accountNameId").val("Mama Ezinne Restaurant");
+        $("#bankNameId").val("Zenith Bank");
+        $("#accountNumberId").val("2553153651");
+        $("#amount").val(gToT);
+        $("#modals").modal('show');
+    }
+
+    var orderObject = [];
+
+    function CollectOrderDetails()
+    {
+        debugger;
+        for (let i = 1; i < numberOfFoods + 1; i++) 
+        {
+            var chk = $("#counterInput_" + i).val();
+            var data = { foodId: '', unitPrice: '', Quantity: '', total: '' };
+            if (chk != undefined) {
+                data.Quantity = $("#counterInput_" + i).val();// input //
+                data.unitPrice = document.getElementById("unitPrice_" + i).innerHTML; // html//
+                data.total = document.getElementById("total_" + i).innerHTML;  // html//
+                data.foodId = $("#fdId_" + i).val(); // html //
+            }
+            orderObject.push(data);
+       }
+    }
+
+    function foody(){
+        debugger;
+        var btt = $("#counterInput_15").val();
+        return btc;
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*
+
+<div class="container p-1" style="margin-top:150px">
+    <div class="row pt-2">
+        <div class="col-6 col-lg-12 col-md-12 col-12">
+            <h2 class="text-dark display-5 text-center">Shopping Cart</h2>
+        </div>
+       
+    </div>
+
+
+
+
+    <br />
+
+<div class="container-fluid" style="width:100%;margin-top:20px">
+    <div class="row">
+        <div class="col-12">*@
+           @* @if (Model.FoodList != null && Model.FoodList.Count() > 0)
+            {*@
+                @*<table class="table table-bordered table-striped table-condensed table-hover">
+                    <thead class="bg-danger text-white">
+                        <tr>
+                            <th style="width:5%" class="text-center" scope="col">S/N</th>
+                            <th style="width:35%" class="text-center" scope="col">Product</th>
+                            <th style="width:10%" class="text-center" scope="col">Price</th>
+                            <th style="width:8%" class="text-center" scope="col">Quantity</th>
+                            <th style="width:10%" class="text-center" scope="col">Total</th>
+                            <th style="width:10%" class="text-center" scope="col">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>*@
+                       @* @foreach (var food in Model.FoodList)
+                        {*@
+                          @*  <tr class="text-dark text-center">
+                                <td></td>
+                                <td data-th="Product">
+                                <div class="row">
+                                <div class="col-md-3 text-left">
+                                        <img src="https://via.placeholder.com/250x250/5fa9f8/ffffff" alt="" style="width:250%;height:95px" class="img-fluid d-none d-md-block rounded mb-2 shadow ">
+                                </div>
+                                <div class="col-md-9 text-left mt-sm-2">
+                                    <h4>Name</h4>
+                                    <p class="font-weight-light">description</p>
+                                </div>
+                               </div>
+                               </td>
+                                <td></td>
+                                <td data-th="Quantity" >
+                                   <input type="number" class="form-control mt-3 form-control-lg text-center" value="1">
+                                </td>
+                                <td></td>
+                                <td class="text-center">
+                                    <div class="w-75 btn-group" role="group">
+                                    <a class="btn mt-2" href="#" @*onclick="DeleteFood('@food.Id')"><i style="font-size:30px" class="bi bi-trash-fill"></i></a>
+                                    </div>
+
+                                </td>
+                            </tr>*@
+
+                        @*}*@
+            @*        </tbody>
+                </table>
+                <div class="row mt-4 d-flex align-items-center">
+                    <div class="col-sm-6 order-md-2 text-right">
+                        <a data-toggle="modal" data-target="#modals" class="btn btn-danger mb-4 btn-lg pl-5 text-center pr-5">Checkout</a>
+                    </div>
+                    <div class="col-sm-6 mb-3 mb-m-1 order-md-1 text-md-left">
+                        <a href="catalog.html">
+                            <i class="bi bi-arrow-left-short"></i>Continue Shopping
+                        </a>
+                    </div>
+                </div>*@
+            @*}
+            else
+            {
+                <p>No Record Exits</p>
+            }*@
+
+   @*     </div>
+    </div>
+</div>*@
+    <!-- The Modal -->
+@*    <div class="modal fade mt-1" id="modals">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                            <div class="modal-header">
+                <h4 class="modal-title">Modal Heading</h4>
+
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h3 class="modal-title mb-3 text-center mb-3" style="font-size:50px;font-family:monserrt;color:red">Order Now</h3>
+
+                    <div class="row">
+                        <input id="foodId" class="form-control" hidden />
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>AccountName</label>
+                                <input type="text" class="form-control" id="accountNameId" disabled />
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>AccountNumber</label>
+                                <input type="number" id="accountNumberId" class="form-control" disabled />
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Amount</label>
+                                <input type="number" id="amount" class="form-control" required disabled />
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Bank Name</label>
+                                <input type="text" class="form-control" id="bankNameId" disabled />
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Close</button>
+                        <button type="button" class="btn btn-primary">Confirm Payment</button>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>*@
+
+<style>
+    .modal-backdrop {
+        z-index: 1040 !important; /* Set the desired z-index value */
+        background-color: rgba(0, 0, 0, 0.5) !important; /* Set the desired background color */
+    }
+</style>

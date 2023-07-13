@@ -2,6 +2,7 @@
 using Core.Models;
 using Core.ViewModels;
 using FoodBar.Models;
+using Logic.Helpers;
 using Logic.IHelpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -41,7 +42,7 @@ namespace FoodBar.Controllers
         [HttpGet]
         public IActionResult PaymentTable(int OrderId,/*string evidence,*/ string userName)
         {
-            IEnumerable<Payment> payments = _context.Payments.Where(x => x.Id != 0 && !x.Deleted && x.Active).Include(x => x.User);
+            IEnumerable<Payment> payments = _context.Payments.Where(x => x.Id != 0 && !x.Deleted && x.Active)/*.Include(x => x.*User)*/;
             return View(payments);
         }
 
@@ -50,7 +51,7 @@ namespace FoodBar.Controllers
         {
             if (payId != 0)
             {
-                var payment = _context.Payments.Where(x => x.Id == payId).Include(u => u.User).FirstOrDefault();
+                var payment = _context.Payments.Where(x => x.Id == payId)./*Include(u => u.User).*/FirstOrDefault();
                 if (payment != null)
                 {
                     return Json(new { isError = false, data = payment });
@@ -98,8 +99,8 @@ namespace FoodBar.Controllers
         {
             ViewBag.foods = _foodHelper.GetFoodDropdown();
             var salesRecordViewModel = new List<SalesRecordViewModel>();
-            var records = _context.SalesRecords.Where(s => s.FoodId > 0 && s.UserId != null && !s.IsDeleted)
-                .Include(s => s.User).Include(s => s.Foods).ToList();
+            var records = _context.SalesRecords.Where(s => s.FoodId > 0 && !s.IsDeleted)
+                .Include(s => s.Foods).ToList();
             if (records.Any())
             {
                 foreach (var record in records)
@@ -108,13 +109,10 @@ namespace FoodBar.Controllers
                     {
                      FoodId = record.FoodId,
                      FoodName = record.Foods?.Name,
-                     UserId = record.UserId,
-                     UserName = record.User?.Email,
                      RecordDate = record.RecordDate,
                      Price = record.Price,
                      Quantity = record.Quantity,
                      Total = record.Total,
-                     GrandTotal = record.GrandTotal
                     };
                     salesRecordViewModel.Add(recordView);   
                 }
@@ -137,32 +135,32 @@ namespace FoodBar.Controllers
             return Json(new { isError = true, msg = "Please add food " });
         }
 
-        public IActionResult GetOrdersByDataCreated(DateTime selectedDate)
-        {
-            try
-            {
-                if (selectedDate != DateTime.MinValue)
-                {
-                    var orders = _context.Orders.Where(x => x.Id > 0 && x.UserId != null && x.FoodId > 0 && x.DateCreated.Date == selectedDate.Date).Include(x => x.Foods).Include(x => x.User).ToList();
-                    if (orders != null && orders.Any())
-                    {
+        //public IActionResult GetOrdersByDataCreated(DateTime selectedDate)
+        //{
+        //    try
+        //    {
+        //        if (selectedDate != DateTime.MinValue)
+        //        {
+        //            var orders = _context.Orders.Where(x => x.Id > 0 && x.UserId != null && x.OrderDetails == null && x.DateCreated.Date == selectedDate.Date).Include(x => x.).Include(x => x.User).ToList();
+        //            if (orders != null && orders.Any())
+        //            {
                         
-                        var foods = orders.Select(x=> x.Foods).Distinct();
-                        var users = orders.Select(x => x.User).Distinct();
-                      var price =  foods.Where(c => c.Id > 0 && c.Price != null).FirstOrDefault().Price;
+        //                var foods = orders.Select(x=> x.OrderDetails).Distinct();
+        //                var users = orders.Select(x => x.User).Distinct();
+        //              var price =  foods.Where(c => c.Id > 0 && c.Price != null).FirstOrDefault().Price;
 
-                        return Json(new { isError = false,data = orders,foods = foods,users = users,price = price});
-                    }
-                    return Json(new { isError = true, msg = "Input Required" });
-                }
-                return Json(new { isError = true, msg = "Input Required" });
-            }
-            catch (Exception exp)
-            {
+        //                return Json(new { isError = false,data = orders,foods = foods,users = users,price = price});
+        //            }
+        //            return Json(new { isError = true, msg = "Input Required" });
+        //        }
+        //        return Json(new { isError = true, msg = "Input Required" });
+        //    }
+        //    catch (Exception exp)
+        //    {
 
-                throw exp;
-            }
-        }
+        //        throw exp;
+        //    }
+        //}
 
         [HttpGet]
         public JsonResult GetPriceDetails(int foodId)
@@ -253,7 +251,60 @@ namespace FoodBar.Controllers
         {
             return _context.Foods.Where(x => x.Id != 0 && !x.IsDeleted).OrderByDescending(X => X.DateCreated).ToList();
         }
+
+        //Edit-GET
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            if (id > 0)
+            {
+                return NotFound();
+            }
+            var food = _context.Foods.Find(id);
+            if(food == null)
+            {
+                return NotFound();
+            }
+            return View(food);
+        }
+
+        //POST-EDIT
+        [HttpPost]
+        public JsonResult Edit(IFormFile picture, int id, string name, double price, string description)
+        {
+            var model = new FoodViewModel();
+
+            model.Id = id;
+            model.Name = name;
+            model.ImageUrl = picture;
+            model.Price = price;
+            model.Description = description;
+            var res = _foodHelper.EditFood(model); 
+            if (res)
+            {
+                return Json(new { isError = false, msg = "Updated Successfully." });
+            }
+            return Json(new { isError = true, msg = "Something went wrong." });
+        }
+
+        [HttpPost]
+        public JsonResult DeleteFood(int id)
+        {
+            if (id > 0)
+            {
+                var removeFood = _foodHelper.DeleteFood(id);
+                if (removeFood)
+                {
+                    return Json(new { isError = false, msg = "Deleted Successfully." });
+                }
+                
+            }
+            return Json(new { isError = true, msg = "Something went wrong." });
+        }
+
+    
     }
 
 }
 
+ 

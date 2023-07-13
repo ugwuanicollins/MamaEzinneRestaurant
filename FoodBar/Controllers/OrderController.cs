@@ -1,5 +1,4 @@
 ﻿using Core.DATABASE;
-using Core.Migrations;
 using Core.Models;
 using Core.ViewModels;
 using Logic.IHelpers;
@@ -33,14 +32,27 @@ namespace FoodBar.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(int foodId)
+        public IActionResult Index(int payId)
         {
-            var username = User.Identity.Name;
-            var user = _userHelper.FindByUserName(username);
-            var order = _context.Orders.Where(x => x.Id != 0 && !x.Deleted && x.UserId == user.Id).FirstOrDefault();
-            if (order != null)
+            var order = new Payment();
+            if(payId > 0)
             {
-                return View(order);
+                order = _context.Payments.Where(x => x.Id == payId).Include(x => x.Orders).Include(x => x.Orders.User).FirstOrDefault();
+            
+                if(order != null)
+                {
+
+                    var foodPurchase = JsonConvert.DeserializeObject<OrderItems[]>(order.Orders.OrderDetails);
+                    if(foodPurchase != null)
+                    {
+                        foreach (var x in foodPurchase)
+                        {
+                            x.Foods = _foodHelper.GetFoodById(x.FoodId.Value).Result;
+                        }
+                    }
+                    order.Orders.RotaObject = foodPurchase;
+                    return View(order);
+                }
             }
             return View();
         }
@@ -51,7 +63,7 @@ namespace FoodBar.Controllers
             var orders = new List<Order>();
             var username = User.Identity.Name;
             var user = _userHelper.FindByUserName(username);
-            if(user != null)
+            if (user != null)
             {
                 IEnumerable<Order> order = _context.Orders.Where(x => x.Id != 0 && !x.Deleted && x.UserId == user.Id).ToList();
                 return View(order);
@@ -62,20 +74,20 @@ namespace FoodBar.Controllers
 
 
         [HttpPost]
-        public JsonResult OrderPayment(int foodId, string accountName, string bankName, string accountNumber,int quantity,double amount)
+        public JsonResult OrderPayment(OrderViewModel orderData)
         {
             try
             {
-                if (foodId != 0)
+                if (orderData != null)
                 {
                     var userName = (User.Identity.Name);
-                    var referenceNumber = _orderHelper.GenerateOrderNumber();
-                    if (referenceNumber != null && userName != null)
+                    if (userName != null)
                     {
-                        var order = _orderHelper.Order(foodId, referenceNumber, accountName, bankName, accountNumber, userName,quantity,amount);
+                        orderData.UserName = userName;
+                        var order = _orderHelper.Order(orderData);
                         if (order != null)
                         {
-                            var payment = _orderHelper.UpdatePaymentTable(order.Id, /*evidence*/ userName);
+                            var payment = _orderHelper.UpdatePaymentTable(order);
                             return Json(new { isError = false, data = payment, msg = "Payment was added Successfully." });
                         }
                         return Json(new { isError = false, msg = "order payment was Successfully added." });
@@ -91,16 +103,16 @@ namespace FoodBar.Controllers
         }
 
         [HttpPost]
-        public IActionResult UploadEvidence(int orderId, int paymentId, string realfilepath)
+        public IActionResult UploadEvidence(int orderId, int paymentId, IFormFile picture)
         {
-            var image = "/pic/" + realfilepath;
+            var image = _foodHelper.ProcessFoodImage(picture);
             var payments = _context.Payments.Where(x => x.OrderId == orderId && x.Id == paymentId && !x.Deleted).FirstOrDefault();
             if (payments != null)
             {
                 payments.Evidences = image;
                 _context.Update(payments);
                 _context.SaveChanges();
-                return Json(new { isError = false, msg = "Payment was added Successfully." });
+                return Json(new { isError = false, msg = "Payment was added Successfully.", payId = payments.Id });
             }
             return Json(new { isError = true, msg = "Something went wrong." });
         }

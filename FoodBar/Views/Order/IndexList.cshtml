@@ -8,40 +8,51 @@
 
 <div  class="container p-3" style="margin-top:100px">
     <div class="row pt-4">
-        <div class="col-6">
-            <h2 class="text-danger">PaymentDetails</h2>
+        <div class="col-7">
+            <h2 class="text-danger text-bold">OrderDetails</h2>
         </div>
     </div>
 
-    <br />
-
-    @if (Model.Count() > 0)
-    {
-        <div class="text-center jumbotron-fluid">
-            <div class="row gy-2">
-                @foreach (var item in Model)
+    <div class="container table-responsive" style="margin-top:10px">
+        <div class="row">
+            <div class="col-12" width="200%">
+                @if (Model.Count() > 0)
                 {
-                    <div class="col-4 card mt-3">
-                        <div class="card-body">
-                            <h3 id="foodId" hidden></h3>
-                            <h3 id="foodName" style="padding-right:110px;" class=" mb-3 mt-2 "><span style="font-size:30px;font-weight:bold;font-family:monserrat">Name:</span> @item.FoodName</h3>
-                            <h3 id="amount" style="padding-right:200px;" class="mb-3"><span style="font-size:30px;font-weight:bold;font-family:monserrat">Price:</span> $@item.Amount</h3>
-                            <h3 id="referenceNumber" style="margin-right:10px" class="mb-3"><span style="font-size:30px;font-weight:bold;font-family:monserrat">RefNumber:</span> @item.ReferenceNumber</h3>
-                            <h3 id="datecreated" style="margin-right:70px" class="mb-2"><span style="font-size:30px;font-weight:bold;font-family:monserrat">Date Paid:</span> @item.DateCreated.ToString("d")</h3>
-                            <h3 id="status" style="margin-right:200px;" class="mb-2"><span style="font-size:30px;font-weight:bold;font-family:monserrat">Status:</span>  @item.status</h3>
-                            <h3 id="quantity" style="margin-right:200px;" class="mb-2"><span style="font-size:30px;font-weight:bold;font-family:monserrat">Quantity:</span>  @item.Quantity</h3>
-                        </div>
-                    </div>
-                }
-            </div>
+                    <table id="itemTable" class="table table-bordered table-striped  table-condensed table-hover" width="200%">
+                        <thead class="bg-danger text-white">
+                            <tr>
+                                <th class="text-center" scope="col">FoodName</th>
+                                <th class="text-center" scope="col">Amount</th>
+                                <th class="text-center" scope="col">ReferenceNumber</th>
+                                <th class="text-center" scope="col">DateCreated</th>
+                            </tr>
+                        </thead>
 
-        </div>
-    }
-    else
-    {
-        <p>No Food Exits</p>
-    }
+                        <tbody class="bg-muted">
+                            @foreach (var item in Model)
+                            {
+
+                                <tr class="text-dark text-center">
+                                    <td id="foodId" hidden></td>
+                                    <td id="foodId">@item.OrderDetails</td>
+                                    <td id="amount">@item.Amount</td>
+                                    <td id="referenceNumber">@item.ReferenceNumber</td>
+                                    <td id="datecreated">@item.DateCreated.ToString("d")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p>No Order Exits</p>
+                }
+
+               </div>
+          </div>
+      </div>
 </div>
+
 
 
 

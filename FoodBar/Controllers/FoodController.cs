@@ -38,6 +38,7 @@ namespace FoodBar.Controllers
             return View(food);
         }
 
+       
         // GET - ADDFOOD
         [HttpGet]
         public IActionResult AddFood()
@@ -46,7 +47,7 @@ namespace FoodBar.Controllers
             return View();
         }
 
-
+        
         [HttpPost]
         public async Task<ActionResult> AddFood(FoodViewModel foodViewModel)
         {
@@ -97,8 +98,6 @@ namespace FoodBar.Controllers
             }
             return Json(new { isError = true, msg = "error no id found" });
         }
-
-
 
 
 

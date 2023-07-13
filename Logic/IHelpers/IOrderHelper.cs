@@ -11,8 +11,8 @@ namespace Logic.IHelpers
     public interface IOrderHelper
     {
         //Task<Order> CreatePaystackPayment(string UserId, double amount, ApplicationUser user, int orderId);
-        Order Order(int foodId, string referenceNumber, string accountName, string bankName, string accountNumber,string userName, int quantity,double amount);
-        Payment UpdatePaymentTable(int orderId, /*string evidence,*/ string userName);
+        Order Order(OrderViewModel orderData);
+        Payment UpdatePaymentTable(Order order);
 
         string GenerateOrderNumber();
         //bool OrderDetails(OrderViewModel orderDetails);
