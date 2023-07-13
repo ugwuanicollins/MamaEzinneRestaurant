@@ -15,6 +15,7 @@ using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using static System.Collections.Specialized.BitVector32;
 using Core.Enums;
+using Newtonsoft.Json;
 
 namespace Logic.Helpers
 {
@@ -24,14 +25,39 @@ namespace Logic.Helpers
         private readonly UserManager<ApplicationUser> _userManager;
         private SignInManager<ApplicationUser> _signInManager;
         private readonly IUserHelper _userHelper;
+        private readonly IFoodHelper _foodHelper;
 
-        public OrderHelper(AppDbContext context, IUserHelper userHelper, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public OrderHelper(AppDbContext context, IUserHelper userHelper, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IFoodHelper foodHelper)
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
             _userHelper = userHelper;
+            _foodHelper = foodHelper;
+        }
 
+        public Payment PreviewOrder(int payId)
+        {
+            var order = new Payment();
+            if (payId > 0)
+            {
+                order = _context.Payments.Where(x => x.Id == payId).Include(x => x.Orders).Include(x => x.Orders.User).FirstOrDefault();
+
+                if (order != null)
+                {
+
+                    var foodPurchase = JsonConvert.DeserializeObject<OrderItems[]>(order.Orders.OrderDetails);
+                    if (foodPurchase != null)
+                    {
+                        foreach (var x in foodPurchase)
+                        {
+                            x.Foods = _foodHelper.GetFoodById(x.FoodId.Value).Result;
+                        }
+                    }
+                    order.Orders.RotaObject = foodPurchase;
+                }
+            }
+            return order;
         }
 
         public string GenerateOrderNumber()

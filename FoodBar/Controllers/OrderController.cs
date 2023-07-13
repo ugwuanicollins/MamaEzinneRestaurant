@@ -34,44 +34,37 @@ namespace FoodBar.Controllers
         [HttpGet]
         public IActionResult Index(int payId)
         {
-            var order = new Payment();
-            if(payId > 0)
+            if (payId > 0)
             {
-                order = _context.Payments.Where(x => x.Id == payId).Include(x => x.Orders).Include(x => x.Orders.User).FirstOrDefault();
-            
-                if(order != null)
-                {
-
-                    var foodPurchase = JsonConvert.DeserializeObject<OrderItems[]>(order.Orders.OrderDetails);
-                    if(foodPurchase != null)
-                    {
-                        foreach (var x in foodPurchase)
-                        {
-                            x.Foods = _foodHelper.GetFoodById(x.FoodId.Value).Result;
-                        }
-                    }
-                    order.Orders.RotaObject = foodPurchase;
-                    return View(order);
-                }
+                var order = _orderHelper.PreviewOrder(payId);
+                return View(order);
             }
-            return View();
+            return RedirectToAction("Index", "Food");
         }
 
         [HttpGet]
-        public IActionResult IndexList(int foodId)
+        public IActionResult IndexList()
         {
-            var orders = new List<Order>();
+            var orders = new List<Payment>();
             var username = User.Identity.Name;
             var user = _userHelper.FindByUserName(username);
             if (user != null)
             {
-                IEnumerable<Order> order = _context.Orders.Where(x => x.Id != 0 && !x.Deleted && x.UserId == user.Id).ToList();
-                return View(order);
+                var order = _context.Payments.Where(x => x.Id != 0).Include(o => o.Orders).Where(x => x.Orders.UserId == user.Id).ToList();
+                if (order != null)
+                {
+                    return View(order);
+                }
             }
-
             return View(orders);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> PreviewOrder(int id)
+        {
+            var order = _orderHelper.PreviewOrder(id);
+            return PartialView(order);
+        }
 
         [HttpPost]
         public JsonResult OrderPayment(OrderViewModel orderData)
