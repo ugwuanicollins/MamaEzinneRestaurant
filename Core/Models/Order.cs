@@ -30,7 +30,7 @@ namespace Core.Models
         public bool Deleted { get; set; }
 
         [NotMapped]
-        public OrderItems[]? RotaObject { get; set; }             
+        public OrderItems[]? OrderObject { get; set; }             
     }
  
 }

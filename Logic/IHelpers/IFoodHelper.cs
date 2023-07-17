@@ -15,7 +15,6 @@ namespace Logic.IHelpers
         Task<Food> GetFoodById(int foodId);
         //bool DeleteFood(FoodViewModel foodViewModelId);
         List<Food> GetFoodDropdown();
-        Task<SalesRecord> SaveSalesRecord(int foodId, double price, DateTime recordDate, string user, double total, int quantity);
         bool EditFood(FoodViewModel foodViewModel);
         bool DeleteFood(int id);
         string ProcessFoodImage(IFormFile image);

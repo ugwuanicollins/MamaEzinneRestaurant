@@ -15,11 +15,7 @@ namespace Logic.IHelpers
         Task<ApplicationUser> FindByUserNameAsync(string username);
         ApplicationUser FindByUserName(string username);
         Task<ApplicationUser> GetUserById(string userId);
-        bool UpdatePaymentInfo(string userId, int orderId);
-        bool UpdateOrderInfo(string userId, int orderId);
-        bool DeclinePaymentInfo(string userId, int orderId);
-        bool DeclineOrderInfo(string userId, int orderId);
-
-
+        string UpdatePaymentInfo(int orderId);
+        string DeclinePaymentInfo(int orderId);
     }
 }

@@ -25,13 +25,13 @@ namespace Logic.Helpers
             _context = context;
         }
 
-        public void SendApprovalEmailToCustomer(ApplicationUser user)
+        public void SendApprovalEmailToCustomer(string email)
         {
             try
             {
-                if (user != null)
+                if (email != null)
                 {
-                    string toEmail = user.Email;
+                    string toEmail = email;
                     string subject = "Payment Confirmation";
                     string message = "We got your transaction, Thank you for patronizing Us";
                     _emailService.SendEmail(toEmail, subject, message);
@@ -42,13 +42,13 @@ namespace Logic.Helpers
                 throw;
             }
         }
-        public void SendDeclinationEmailToCustomer(ApplicationUser user)
+        public void SendDeclinationEmailToCustomer(string email)
         {
             try
             {
-                if (user != null)
+                if (email != null)
                 {
-                    string toEmail = user.Email;
+                    string toEmail = email;
                     string subject = "Payment Confirmation";
                     string message = "Sorry we didn't receive your transaction, check your balance";
                     _emailService.SendEmail(toEmail, subject, message);

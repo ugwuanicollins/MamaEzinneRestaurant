@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.Security.Cryptography;
 using NuGet.Packaging.Signing;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Newtonsoft.Json;
 
 namespace Logic.Helpers
 {
@@ -89,8 +90,6 @@ namespace Logic.Helpers
                 throw exp;
             }
         }
-
-
         public async Task<Food> GetFoodById(int foodId)
         {
             try
@@ -111,8 +110,6 @@ namespace Logic.Helpers
                 throw exp;
             }
         }
-
-
         public List<Food> GetFoodDropdown()
         {
             try
@@ -137,33 +134,6 @@ namespace Logic.Helpers
                 throw exp;
             }
         }
-
-
-        public async Task<SalesRecord> SaveSalesRecord(int foodId, double price, DateTime recordDate,string user, double total, int quantity)
-        {
-            //if(foodId != 0)
-            //{
-            //    var food = _context.Foods.Where(x => x.Id == foodId && !x.IsDeleted).FirstOrDefault();
-            //    var salesRecord = new SalesRecord()
-            //    {
-            //        FoodId = foodId,
-            //        Price = price,
-            //        RecordDate = recordDate,
-            //        Name = food?.Name,
-            //        UserId = user,
-            //        Total = total,
-            //        Quantity = quantity,
-            //        GrandTotal = total * quantity,
-            //        IsActive = true,
-            //        IsDeleted = false,
-            //    };
-            //    _context.SalesRecords.Add(salesRecord);
-            //    _context.SaveChanges();
-            //    return salesRecord;
-            //}
-            return null;
-        }
-
         public bool EditFood(FoodViewModel foodViewModel)
         {
             if (foodViewModel != null)
@@ -192,7 +162,6 @@ namespace Logic.Helpers
             }
             return false;
         }
-
         public bool DeleteFood(int id)
         {
             if (id > 0)
@@ -209,11 +178,8 @@ namespace Logic.Helpers
             }
             return false;
         }
-
     }
-
-
-    }
+}
 
 
 
