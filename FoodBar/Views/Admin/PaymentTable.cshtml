@@ -71,7 +71,7 @@
                                 <th class="text-center" scope="col" style="font-size:23px">Evidence</th>
                                 <th class="text-center" scope="col" style="font-size:23px">PreviewSlip</th>
                                 <th class="text-center" scope="col" style="font-size:23px">PreviewOrder</th>
-                                <th class="text-center" scope="col" style="font-size:23px">Action</th>
+                                <th class="text-center" scope="col" style="font-size:23px">Action</th>>
                                  </tr>
                         </thead>
 
@@ -91,7 +91,7 @@
                                     @if (payment.status == PaymentStatus.pending)
                                     {
                                     <a onclick="ApproveCustomerPayment(@payment?.OrderId)" class="btn btn-success" id="approvedBtn">Approve</a>
-                                    <a onclick="DeclineCustomerPayment(@payment.OrderId)" class="btn btn-danger" id="declinedBtn">Decline</a>
+                                    <a onclick="DeclineCustomerPayment(@payment?.OrderId)" class="btn btn-danger" id="declinedBtn">Decline</a>
                                     }
                                     else
                                     {

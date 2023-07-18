@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Core.Models.Payment>
+﻿@using Core.Enums;
+@model IEnumerable<Core.Models.Payment>
 @{
     ViewData["Title"] = "IndexList";
     Layout = "~/Views/Shared/_AccountLayout.cshtml";
@@ -37,7 +38,7 @@
 </style>
 
 
-<div class="jumbotron" style="margin-top:110px">
+<div class="container-fluid" style="margin-top:110px">
 
     <h2 class="text-center text-danger">All Orders</h2>
     <div class="col-lg-12">
@@ -51,6 +52,7 @@
                                 <th class="text-center" scope="col" style="font-size:23px">RefNumber</th>
                                 <th class="text-center" scope="col" style="font-size:23px">OrderStatus</th>
                                 <th class="text-center" scope="col" style="font-size:23px">ViewOrder</th>
+                                <th class="text-center" scope="col" style="font-size:23px">payment Receipt</th>
                             </tr>
                         </thead>
 
@@ -59,11 +61,21 @@
                             {
 
                                 <tr class="text-dark text-center">
-                                    <td style="font-size:20px" width="2%"></td>
-                                    <td width="4%" style="font-size:20px" id="foodId">@item.DatePaid.ToShortDateString()</td>
-                                    <td width="5%" style="font-size:20px" id="amount">@item?.Orders?.ReferenceNumber</td>
-                                    <td width="5%" style="font-size:20px" id="referenceNumber">@item?.status</td>
-                                    <td width="5%" style="font-size:20px" id="datecreated"><a class="btn w-40 btn-primary text-white" onclick="GetOrderPartialView(@item?.Id)">Orders</a></td>
+                                    <td style="font-size:20px" width="5%"></td>
+                                    <td width="10%" style="font-size:20px" id="foodId">@item.DatePaid.ToShortDateString()</td>
+                                    <td width="25%" style="font-size:20px" id="amount">@item?.Orders?.ReferenceNumber</td>
+                                    <td width="15%" style="font-size:20px" id="referenceNumber">@item?.status</td>
+                                    <td width="25%" style="font-size:20px" id="datecreated"><a class="btn btn-lg btn-primary text-white" onclick="GetOrderPartialView(@item?.Id)">Orders</a></td>
+                                    <td width="25%" style="font-size:20px" id="datecreated">
+                                    @if (item?.status == PaymentStatus.Seen)
+                                    {
+                                    <a  class="btn btn-lg btn-primary" disabled>Re-upload Proof</a>
+                                    
+                                    }
+                                    else
+                                    {
+                                    <a onclick="ShowEvidenceModal('@item?.Orders?.Id','@item?.Id')" class="btn btn-lg btn-primary">Re-upload Proof</a>
+                                    }
                                 </tr>
                             }
                         </tbody>
@@ -89,6 +101,31 @@
                 <!-- Modal body -->
                 <div class="modal-body" id="preview">
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- The Modal -->
+    <div class="modal" id="evidenceModal">
+        <div class="modal-dialog p-3 mt-5" style="max-width:45%">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header p-3 bg-danger">
+                    <h4 class="modal-title align-items-center  text-bold text-white" style="margin-left:210px"> Upload Evidence of Payment</h4>
+                    <button type="button" class="close text-dark" data-bs-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input class="form-control " id="evidenceId" type="file" />
+                            <a class="btn btn-lg btn-info mt-4" style="margin-left:320px"  onclick="GetUploadedEvidence()">Submit</a>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

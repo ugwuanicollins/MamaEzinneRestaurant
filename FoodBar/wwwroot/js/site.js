@@ -74,7 +74,11 @@ function GetUploadedEvidence()
     })
 }
 
-
+function ShowEvidenceModal(order_Id, payment_Id) {
+    orderId = order_Id;
+    paymentId = payment_Id;
+    $("#evidenceModal").modal('show');
+}
 
 function ApproveCustomerPayment(orderId) {
     debugger
@@ -150,120 +154,6 @@ function DeclineCustomerPayment(orderId) {
         }
     })
 }
-
-//$("#foodList").change(function () {
-//    debugger
-//    var foodId = $('#foodList').val();
-//    $.ajax({
-//        type: 'Get',
-//        url: '/Admin/GetFoodDetails',
-//        data:
-//        {
-//            foodId: foodId, 
-//        },
-//        success: function (result) {
-//            $('#price').val(result.data.price);
-//        },
-//    });
-//});
-
-//function Quantity() {
-//    var quantity = $('#quantity').val();
-//    var foodId = $('#foodId').val();
-//    debugger
-//    $.ajax({
-//        type: 'GET',
-//        url: '/Order/GetPriceByQuantity',
-//        dataType: 'json',
-//        data:
-//        {
-//            foodId: foodId, quantity:quantity
-//        },
-//        success: function (result) {
-//            debugger;
-//            if (!result.isError) {
-//                $('#amount').val(result.data);
-//            }
-//            else {
-//                errorAlert(result.msg);
-//            }
-//        },
-//        error: function (ex) {
-
-//            errorAlert(ex);
-//        }
-//    })
-//}
-
-//function calculateTotal() {
-//    var quantity = parseFloat(document.getElementById("quantity").value);
-//    var priceFood = parseFloat(document.getElementById("priceFood").value);
-
-//    var total = isNaN(quantity) || isNaN(priceFood) ? 0 : quantity * priceFood;
-
-//    document.getElementById("total").value = isNaN(total) ? "" : total.toFixed(2);
-//}
-
-//function fetchFoodPrice() {
-//    debugger
-//    var foodId = $('#selectFoods').val();
-//    $.ajax({
-//        type: 'GET',
-//        url: '/Admin/GetPriceDetails',
-//        dataType: 'json',
-//        data:
-//        {
-//            foodId: foodId,
-//        },
-//        success: function (result) {
-//            debugger;
-//            if (!result.isError) {
-//                $('#priceFood').val(result.data.price);
-//            }
-//            else {
-//                errorAlert(result.msg);
-//            }
-//        },
-//        error: function (ex) {
-
-//            errorAlert(ex);
-//        }
-//    })
-//}
-
-//function SaveSalesRecord() {
-//    debugger
-//    var foodId = $("#selectFoods").val();
-//    var recordDate = $("#datetimeInput").val();
-//    var user = $("#selectUsers").val();
-//    var price = $("#priceFood").val();
-//    var quantity = $("#quantity").val();
-//    var total = $("#total").val();
-   
-//    $.ajax({
-//        type: 'POST',
-//        url: '/Admin/SaveRecordTable',
-//        dataType: 'json',
-//        data:
-//        {
-//            foodId: foodId, recordDate: recordDate, user: user, price: price, quantity: quantity, total: total
-//        },
-//        success: function (result) {
-//            debugger;
-//            if (!result.isError) {
-//                var url = '/Admin/KeepRecord';
-//                successAlertWithRedirect(result.msg, url);
-//            }
-//            else {
-//                errorAlert(result.msg);
-//            }
-//        },
-//        error: function (ex) {
-
-//            errorAlert(ex);
-//        }
-//    })
-//}
 
 
 function viewPayment(id) {
