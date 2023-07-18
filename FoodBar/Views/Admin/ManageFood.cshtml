@@ -34,7 +34,7 @@
 
                       <tr class="table-secondary mt-4 text-center">
                             <td width="1%" style="font-size:25px"></td>
-                            <td width="5%" class="text-bold mt-2 align-items-center"><img class="rounded" src="@food.Image" style="width:400px;height:200px"></td>
+                            <td width="5%" class="text-bold mt-2 align-items-center"><img class="rounded" src="@food.Image" style="width:300px;height:200px"></td>
                             <td width="5%" class="text-bold mt-2 text-center" style="font-size:25px">@food.Name</td>
                             <td width="10%" style="font-size:25px">@food.Description</td>
                             <td width="3%" style="font-size:25px">@food.Price</td>
@@ -77,33 +77,33 @@
                                 <div class="form-group mb-1 mr-0 row " style="display:flex;margin-right:60px">
                                     <label for="name" class="col-sm-12 col-form-label text-bold text-dark" style="font-weight:bold;">FoodName</label>
                                     <div class="col-sm-12">
-                                        <input class="form-control" type="text" name="name" asp-for="Name">
+                                        <input class="form-control" type="text" name="name" asp-for="Name" required>
                                         <span asp-validation-for="Name" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="form-group mb-1 mr-0 row " style="display:flex;margin-right:60px">
                                     <label asp-for="Image" class="col-sm-12 col-form-label text-bold text-dark" style="font-weight:bold;">Image</label>
                                     <div class="col-sm-12 custom-file">
-                                        <input class="form-control " asp-for="ImageUrl" style="width:100%" type="file" multiple />
+                                        <input class="form-control " asp-for="ImageUrl" style="width:100%" required type="file" multiple  />
                                         <span asp-validation-for="Image" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="form-group mb-1 mr-0 row " style="display:flex;margin-right:60px">
                                     <label for="price" class="col-sm-12 col-form-label text-bold text-dark" style="font-weight:bold;">Price</label>
                                     <div class="col-sm-12">
-                                        <input class="form-control" type="number" name="price" asp-for="Price">
+                                        <input class="form-control" type="number" name="price" asp-for="Price" required>
                                         <span asp-validation-for="Price" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="form-group mb-1 mr-0 row " style="display:flex;margin-right:60px">
                                     <label for="message" class="col-sm-12 col-form-label text-bold text-dark" style="font-weight:bold;">Description</label>
                                     <div class="col-sm-12">
-                                        <textarea class="form-control" asp-for="Description" id="message" rows="5" cols="23"></textarea>
+                                        <textarea class="form-control" asp-for="Description" id="message" rows="5" cols="23" required></textarea>
                                         <span asp-validation-for="Description" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="mb-1  mt-2 text-center">
-                                    <input type="submit" value="Submit" class="btn btn-danger text-bold" style="border-radius:90px;background-color: red; height: 3em; width: 30%; color: whitesmoke;margin-left:20px" />
+                                    <input type="submit" value="Submit" class="btn btn-danger text-bold"  style="border-radius:90px;background-color: red; height: 3em; width: 30%; color: whitesmoke;margin-left:20px" />
                                 </div>
                             </form>
                         </section>
