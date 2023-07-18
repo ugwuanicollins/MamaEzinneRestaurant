@@ -54,7 +54,7 @@ namespace Logic.Helpers
                             x.Foods = _foodHelper.GetFoodById(x.FoodId.Value).Result;
                         }
                     }
-                    order.Orders.RotaObject = foodPurchase;
+                    order.Orders.OrderObject = foodPurchase;
                 }
             }
             return order;

@@ -1,161 +1,55 @@
 ﻿@model IEnumerable<Core.ViewModels.SalesRecordViewModel>
-
-
 @{
 
     ViewData["Title"] = "salesRecordTable";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    var selectedFoods = Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.SelectedFoods);
-    var selectedUsers = Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.SelectedUsers);
 }
 
-@*<div class="container p-2" style="margin-top:150px">
-    <div class="row pt-4">
-        <div class="col-6">
-            <h2 class="text-dark">Sales Record</h2>
-        </div>
-        <div class="col-6 text-end">
-            <a data-toggle="modal" data-target="#modals" class="btn btn-lg btn-danger text-center ml-auto text-white" style="width:35%;border-radius:90px;height:55px;float: right">Add Record</a>
-        </div>
+
+<div class="container-fluid" style="margin-top:120px">
+    <h3 class="text-center text-danger">SalesRecord Table</h3>
+    <div class="col-lg-12">
+        @if (Model != null && Model.Count() > 0)
+        {
+            <table id="myTable" class="table display table-responsive table-bordered table-condensed table-striped table-hover mt-3">
+                <thead>
+                    <tr id="myText">
+                        <th class="text-center" scope="col" style="font-size:23px">S/N</th>
+                        <th class="text-center" scope="col" style="font-size:23px">FoodName</th>
+                        <th class="text-center" scope="col" style="font-size:23px">Email</th>
+                        <th class="text-center" scope="col" style="font-size:23px">OrderNumber</th>
+                        <th class="text-center" scope="col" style="font-size:23px">Price</th>
+                        <th class="text-center" scope="col" style="font-size:23px">Quantity</th>
+                        <th class="text-center" scope="col" style="font-size:23px">Total</th>
+                        <th class="text-center" scope="col" style="font-size:23px">RecordDate</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var record in Model)
+                    {
+
+                        <tr class="table-secondary mt-4 text-center">
+                            <td width="2%"></td>
+                            <td width="10%" style="font-size:20px">@record.FoodName</td>
+                            <td width="5%" style="font-size:20px">@record.Email</td>
+                            <td width="10%" style="font-size:20px">@record.OrderNumber</td>
+                            <td width="5%" style="font-size:20px">@record.Price</td>
+                            <td width="5%" style="font-size:20px">@record.Quantity</td>
+                            <td width="5%" style="font-size:20px">@record.Total</td>
+                            <td width="5%" style="font-size:20px">@record.RecordDate.ToShortDateString()</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No Payment Exits</p>
+        }
+
     </div>
 
-
-
-    <div class="modal" id="modals">
-        <div class="modal-dialog modal-dialog-centered vh-40" style="max-width:40%">
-            <div class="modal-content">
-
-                <!-- Modal Header -->
-                <div class="modal-header p-3 bg-danger">
-                    <h4 class="modal-title align-items-center  text-bold text-white" style="margin-left:230px">Add Sales Record</h4>
-                    <button type="button" class="close text-dark" data-dismiss="modal">&times;</button>
-                </div>
-
-                <!-- Modal body -->
-                <div class="modal-body">
-                    <div class="modal-body">
-                        <div class="col mt-2">
-                            <span style="font-size: 18px;">RECORD DATE</span><input id="datetimeInput" class="form-control" type="date"/>
-                        </div>
-                        <div class="col mb-3">
-                            <span style="font-size: 18px;">NAME</span><select id="selectFoods" onchange="fetchFoodPrice()" class="form-control" disabled></select>
-                        </div>
-                        <div class="col mb-3">
-                            <span style="font-size: 18px;">USER</span><select id="selectUsers" class="form-control" disabled></select>
-                        </div>
-                        <div class="col mb-3">
-                            <span style="font-size: 18px;">PRICE</span><input id="priceFood" onkeyup="calculateTotal()" class="form-control" type="number" disabled />
-                        </div>
-                        <div class="col mb-3">
-                            <span style="font-size: 18px;">QUANTITY</span><input id="quantity" onkeyup="calculateTotal()" class="form-control" type="number" disabled />
-                        </div>
-                        <div class="col mb-3">
-                            <span style="font-size: 18px;">TOTAL</span><input id="total"  class="form-control" type="number" disabled />
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <a class="btn btn-lg btn-danger" onclick="SaveSalesRecord()" style="margin-right:280px;border-radius:90px;">Submit</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <br />
-
-
-    @*<div class="container-fluid">
-         <div class="row">
-              <div class="col-12">
-                @if (Model != null && Model.Count() > 0)
-                {
-                    <table class="table table-bordered table-striped  table-condensed table-hover">
-                        <thead class="bg-danger text-white">
-                            <tr>
-                                <th class="text-center" scope="col">RecordDate</th>
-                                <th class="text-center" scope="col">UserEmail</th>
-                                <th class="text-center" scope="col">Food</th>
-                                <th class="text-center" scope="col">Price</th>
-                                <th class="text-center" scope="col">Quantity</th>
-                                <th class="text-center" scope="col">Total</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            @foreach (var record in Model)
-                            {
-                                <tr class="text-dark text-center">
-                                    <td>@record.RecordDate.ToString("D")</td>
-                                    <td>@record.UserName</td>
-                                    <td>@record.FoodName</td>
-                                    <td>@record.Price</td>
-                                    <td>@record.Quantity</td>
-                                    <td>@record.Total</td>
-                                </tr>
-                                
-                            }
-                        </tbody>
-                    </table>
-                }
-                else
-                {
-                    <p>No Record Exits</p>
-                }
-
-            </div>
-        </div>
-    </div>
-
-
-
-
-    </div>*@
-
-
-
-<div class="container-fluid mb-1 align-items-center" style="width:90%;margin-top:150px">
-    <div class="d-flex justify-content-center row">
-        <div class="col-md-11">
-            @if (Model != null && Model.Count() > 0)
-            {
-                <div class="d-flex flex-row align-items-center mt-3 p-2 bg-white rounded">
-                    <div class="col-sm-6 mb-3 mb-m-1 mt-3 text-danger">
-                        <h2 style="font-size:35px">SalesRecord</h2>
-                    </div>
-                    <div class="col-sm-6 order-md-2 text-right mt-3">
-                        <a data-toggle="modal" data-target="#modals" class="btn btn-lg btn-danger text-center ml-auto text-white" style="width:35%;border-radius:90px;height:55px;float: right">Add Record</a>
-                    </div>
-                </div>
-                @foreach (var record in Model)
-                {
-                    <div class="d-flex flex-row justify-content-between align-items-center p-4 bg-white mt-3 px-4 rounded">
-                        <div class="d-flex align-items-center text-center">
-                            <h4 class="text-dark" style="font-size:26px">@record.RecordDate.ToString("D")</h4>
-                        </div>
-                        <div class="d-flex align-items-center text-center">
-                            <h4 class="text-dark" style="font-size:26px">@record.UserName</h4>
-                        </div>
-                        <div class="d-flex align-items-center text-center">
-                            <h4 class="text-dark" style="font-size:26px">@record.FoodName</h4>
-                        </div>
-                        <div class="d-flex align-items-center text-center">
-                            <h4 class="text-dark" style="font-size:26px">@record.Price</h4>
-                        </div>
-                        <div class="d-flex align-items-center text-center">
-                            <h4 class="text-dark" style="font-size:26px">@record.Quantity</h4>
-                        </div>
-                        <div class="d-flex align-items-center text-center">
-                            <h4 class="text-dark" style="font-size:26px">@record.Total</h4>
-                        </div>
-                    </div>
-                }
-            }
-            else
-            {
-                <p>No record Exits</p>
-            }
-
-        </div>
-    </div>
     <div class="modal" id="modals">
         <div class="modal-dialog modal-dialog-centered vh-40" style="max-width:40%">
             <div class="modal-content">
@@ -198,9 +92,6 @@
 
 </div>
 
-
-
-
 <style>
     body {
         font-family: 'Manrope', sans-serif;
@@ -211,59 +102,28 @@
         z-index: 1040 !important; /* Set the desired z-index value */
         background-color: rgba(0, 0, 0, 0.5) !important; /* Set the desired background color */
     }
+
+
+    table {
+        counter-reset: row-counter;
+    }
+
+    tr > td:first-child:before {
+        counter-increment: row-counter;
+        content: counter(row-counter);
+    }
 </style>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
+
+
+
 <script>
-    var datetimeInput = document.getElementById("datetimeInput");
-    debugger;
-datetimeInput.onchange = function () {
-    debugger;
-    var selectedDate = datetimeInput.value;
-    debugger
-    $.ajax({
-        type: 'GET',
-        url: '/Admin/GetOrdersByDataCreated',
-        dataType: 'json',
-        data:
-        {
-            selectedDate: selectedDate
-        },
-        success: function (result) {
-            debugger;
-            if (!result.isError) {
-                debugger;
-                     document.getElementById("selectFoods").disabled = false;
-                     document.getElementById("selectUsers").disabled = false;
-                     document.getElementById("priceFood").disabled = true;
-                     document.getElementById("quantity").disabled = false;
-                     document.getElementById("total").disabled = true;
-                    var selectedFoods = result.foods; /*@Html.Raw(Json.Serialize(ViewBag.SelectedFoods));*/
-                    var selectedFoodInput = $('#selectFoods');
-                     selectedFoodInput.empty();
-                     $.each(selectedFoods, function (index, value) {
-                    selectedFoodInput.append('<option value="' + value.id + '">' + value.name + '</option>');/*append($('<option></option>').text(value));*/
-                });
-
-                var selectedUsers = result.users;
-                debugger;
-                var selectedUsersInput = $('#selectUsers');
-                selectedUsersInput.empty();
-                $.each(selectedUsers, function (index, value) {
-                    selectedUsersInput.append('<option value="' + value.id + '">' + value.userName + '</option>');/*append($('<option></option>').text(value));*/
-                });
-
-                 $('#priceFood').val(result.price);
-            }
-            else {
-                errorAlert(result.msg);
-            }
-        },
-        error: function (ex) {
-
-            errorAlert(ex);
-        }
-    })
-}
+    $('#myTable').DataTable();
 
 </script>
+
+
+

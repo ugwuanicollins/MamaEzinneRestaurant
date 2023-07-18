@@ -1,54 +1,103 @@
-﻿@model IEnumerable<Core.Models.Payment>
+﻿@using Core.Enums;
+@model IEnumerable<Core.Models.Payment>
 
 @{
     ViewData["Title"] = "PaymentTable";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
+<style>
+    body {
+        font-family: 'Manrope', sans-serif;
+        background: #eee;
+    }
 
-@*<div class="jumbotron-fluid p-3" style="margin-top:100px">
-    <div class="row pt-4">
-        <div class="col-6 mt-3">
-            <h2 class="text-danger text-center">Payment Record</h2>
-        </div>
-    </div>
+    .modal-backdrop {
+        z-index: 1040 !important; /* Set the desired z-index value */
+        background-color: rgba(0, 0, 0, 0.5) !important; /* Set the desired background color */
+    }
 
-    <br />
+    table {
+        counter-reset: row-counter;
+    }
 
-    <div class="container table-responsive" style="margin-top:30px">
-        <div class="row">
-            <div class="col-12">
+    tr > td:first-child:before {
+        counter-increment: row-counter;
+        content: counter(row-counter);
+    }
+</style>
+<script>
+    function GetOrderPartialView(id) {
+        $.ajax({
+            type: 'GET',
+            url: '/Order/PreviewOrder/' + id,
+            data: {},
+            success: function (data) {
+                $("#preview").html(data);
+
+                $("#preview_Modal").modal('show');
+            }
+        });
+    };
+
+
+     ////function performAction() {
+     ////       const button = document.getElementById('myButton');
+     ////       var defaultBtn = button.innerHTML;
+     ////       button.disabled = true;
+     ////       var spinner = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span class="sr-only">Loading...</span>';
+     ////       button.innerHTML = spinner;
+
+
+     ////       button.disabled= false;
+     ////       button.innerHTML = defaultBtn;
+
+     ////   }
+
+</script>
+
+    <div class="container-fluid" style="margin-top:120px">
+        <h3 class="text-center text-danger">Payment Table</h3>
+            <div class="col-lg-12">
                 @if (Model.Count() > 0)
                 {
-                    <table id="itemTable" class="table table-bordered table-striped  table-condensed table-hover" width="200%">
-                        <thead class="bg-danger text-white">
-                            <tr>
-                                <th class="text-center" scope="col">UserName</th>
-                                <th class="text-center" scope="col">Amount</th>
-                                <th class="text-center" scope="col">status</th>
-                                <th class="text-center" scope="col">ReferenceNumber</th>
-                                <th class="text-center" scope="col">DatePaid</th>
-                                <th class="text-center" scope="col">Evidence</th>
-                                <th class="text-center" scope="col">Details</th>
-                                <th class="text-center" scope="col">Action</th>
-                            </tr>
+                    <table id="myTable" class="table display table-responsive table-bordered table-condensed table-striped table-hover" style="width:100%">
+                        <thead>
+                            <tr id="myText">
+                                <th class="text-center" scope="col" style="font-size:23px">S/N</th>
+                                <th class="text-center" scope="col" style="font-size:23px">Amount</th>
+                                <th class="text-center" scope="col" style="font-size:23px">status</th>
+                                <th class="text-center" scope="col" style="font-size:23px">DatePaid</th>
+                                <th class="text-center" scope="col" style="font-size:23px">Evidence</th>
+                                <th class="text-center" scope="col" style="font-size:23px">PreviewSlip</th>
+                                <th class="text-center" scope="col" style="font-size:23px">PreviewOrder</th>
+                                <th class="text-center" scope="col" style="font-size:23px">Action</th>
+                                 </tr>
                         </thead>
 
                         <tbody>
                             @foreach (var payment in Model)
                             {
 
-                                <tr class="table-secondary mt-4" >
-                                    <td >@payment.User.Email</td>
-                                    <td  class="text-center">@payment.Amount</td>
-                                    <td class="text-bold mt-2 align-items-center">@payment.status</td>
-                                    <td class="text-center">@payment.ReferenceNumber</td>
-                                    <td >@payment.DatePaid.ToString("D")</td>
-                                    <td ><img alt=""  style="width:150px;height:64px" src="@payment.Evidences" /></td>
-                                    <td><button class="btn btn-danger text-white mt-2 align-items-center text-center btn-sm details-btn" onclick="viewPayment('@payment.Id')">View</button></td>
-                                    <td class="text-center mt-2" role="group">
-                                        <a onclick="ApproveCustomerPayment('@payment.UserId','@payment.OrderId')" class="btn btn-success">Approve</a>
-                                        <a onclick="DeclineCustomerPayment('@payment.UserId','@payment.OrderId')" class="btn btn-danger">Decline</a>
+                                <tr class="table-secondary mt-4 text-center" >
+                                    <td width="4%"></td>
+                                    <td width="5%" class="text-bold mt-2 align-items-center">@payment.Orders.Amount</td>
+                                    <td width="5%" class="text-bold mt-2 align-items-center">@payment.status</td>
+                                    <td width="10%">@payment.DatePaid.ToString("D")</td>
+                                    <td width="10%"><img alt="" style="width:150px;height:64px" src="@payment.Evidences" /></td>
+                                    <td width="5%"><a class="btn btn-success text-white mt-2 align-items-center text-center w-50 details-btn" onclick="viewPayment(@payment?.Id)">Slip</a></td>
+                                    <td width="5%"><a class="btn btn-primary text-white mt-2 align-items-center text-center w-60" onclick="GetOrderPartialView(@payment?.Id)">ViewOrder</a></td>
+                                    <td class="text-center mt-2" role="group" width="10%">
+                                    @if (payment.status == PaymentStatus.pending)
+                                    {
+                                    <a onclick="ApproveCustomerPayment(@payment?.OrderId)" class="btn btn-success" id="approvedBtn">Approve</a>
+                                    <a onclick="DeclineCustomerPayment(@payment.OrderId)" class="btn btn-danger" id="declinedBtn">Decline</a>
+                                    }
+                                    else
+                                    {
+                                        <a onclick="DisabledAlert()" class="btn btn-success" disabled >Approve</a>
+                                        <a onclick="DisabledAlert()" class="btn btn-danger" disabled >Decline</a>
+                                    }
                                     </td>
                                 </tr>
                             }
@@ -61,84 +110,53 @@
                 }
 
             </div>
-        </div>
-    </div>
-</div>*@
 
-<div class="container-fluid mb-1 align-items-center" style="width:90%;margin-top:150px">
-    <div class="d-flex justify-content-center row">
-        <div class="col-md-11">
-            @if (Model.Count() > 0)
-            {
-                <div class="text-center align-items-center mt-3 bg-white rounded">
-                    <div class="text-center ">
-                        <h2 style="font-size:35px" class="text-danger">Payment Record</h2>
-                    </div>
+
+    <div class="modal" id="preview_Modal">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header bg-danger">
+                    <h1 class="mt-3 text-center" style="margin-left:45%;font-size:30px">OrderDetails</h1>
+                    <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
                 </div>
-                @foreach (var payment in Model)
-                {
-                    <div class="d-flex flex-row justify-content-between align-items-center p-4 bg-white mt-3 px-4 rounded">
-                       @* <div class="d-flex align-items-center text-center">
-                            <h2 class="text-dark" style="font-size:30px">@payment.User.Email</h2>
-                        </div>*@
-                        <div class="d-flex align-items-center text-center">
-                            <h4 class="text-dark" style="font-size:30px">@payment.Orders</h4>
-                        </div>
-                        <div class="d-flex align-items-center text-center">
-                            <h5  class="text-dark" style="font-size:30px">@payment.status</h5>
-                        </div>
-                        <div class="d-flex align-items-center text-center">
-                            <h5 class="text-dark" style="font-size:30px">@payment.DatePaid.ToString("D")</h5>
-                        </div>
-                        <div class="d-flex align-items-center text-center">
-                            <img alt="" style="width:200px;height:94px" src="@payment.Evidences" />
-                        </div>
-                        <div class="d-flex align-items-center text-center">
-                            <button class="btn btn-danger text-white mt-2 align-items-center text-center btn-sm details-btn" onclick="viewPayment('@payment.Id')">View</button>
-                        </div>
-                        <div class="d-flex align-items-center text-center" role="group">
-                            <a onclick="ApproveCustomerPayment('@payment.OrderId')" class="btn btn-success mx-2">Approve</a>
-                            <a onclick="DeclineCustomerPayment('@payment.OrderId')" class="btn btn-danger">Decline</a>
-                        </div>
-                    </div>
-                }
-            }
 
+                <!-- Modal body -->
+                <div class="modal-body" id="preview">
+                </div>
+            </div>
         </div>
-    </div>
+     </div>
+
     <div id="itemModal" class="modal fade" role="dialog">
-        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+        <div class="modal-dialog modal-lg" style="max-width:50%">
             <div class="modal-content">
                 <div class="modal-header bg-danger">
-                    <h4 class="modal-title align-items-center  text-bold text-white" style=" margin-left:230px;font-size:30px">Payment Details</h4>
+                    <h4 class="modal-title align-items-center  text-bold text-white" style=" margin-left:310px;font-size:30px">Payment Details</h4>
+                    <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body" style="font-family:monserrat;font-size:25px;">
                     <div class="row">
                         <div class="text-center align-items-center container-fluid">
                             <img style="height:400px;width:250%" src="" id="imageid" class="img-fluid">
                         </div>
-                        <div class="col-8">
-                            <p id="usernam"><strong style="font-family:monserrat;font-size:25px;font-weight:bold" class="mt-2">UserName: </strong> <span></span></p>
-                            <p id="modal-item-Amount"><strong style="font-family:monserrat;font-size:25px;font-weight:bold" class="mt-2">Amount: </strong> <span></span></p>
-                            <p id="modal-item-ReferenceNumber" style="font-family:monserrat;font-size:25px;font-weight:bold" class="mt-2"><strong>ReferenceNumber: </strong> <span></span></p>
-                            <p id="modal-item-DatePaid"><strong style="font-family:monserrat;font-size:25px;font-weight:bold" class="mt-2">DatePaid: </strong> <span></span></p>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+  </div>
 
-<style>
-    body {
-        font-family: 'Manrope', sans-serif;
-        background: #eee;
+
+
+
+
+
+<script>
+    $('#myTable').DataTable();
+
+    function DisabledAlert(){
+        errorAlert("Action not allowed");
     }
-     
-    .modal-backdrop {
-        z-index: 1040 !important; /* Set the desired z-index value */
-        background-color: rgba(0, 0, 0, 0.5) !important; /* Set the desired background color */
-    }
-    
-</style>
+</script>

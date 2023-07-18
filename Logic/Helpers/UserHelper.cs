@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
 using Core.Enums;
+using Newtonsoft.Json;
 
 namespace Logic.Helpers
 {
@@ -84,81 +85,71 @@ namespace Logic.Helpers
 
         }
 
-       public bool UpdatePaymentInfo(string userId,int orderId)
+       public string UpdatePaymentInfo(int orderId)
         {
-            if (userId != null && orderId > 0)
+            if (orderId > 0)
             {
-                var payment = _context.Payments.Where(x=> x.OrderId == orderId && !x.Deleted).FirstOrDefault();
+                var payment = _context.Payments.Where(x=> x.OrderId == orderId && !x.Deleted).Include(x => x.Orders).Include(x=> x.Orders.User).FirstOrDefault();
                 if (payment != null)
                 {
                     payment.status = PaymentStatus.Seen;
 
+                    payment.Orders.OrderObject = JsonConvert.DeserializeObject<OrderItems[]>(payment.Orders.OrderDetails);
+                    SaveSalesRecord(payment.Orders);
+
                     _context.Payments.Update(payment);
                     _context.SaveChanges();
-                    return true;
+                    return payment.Orders.User.Email;
                 }
             }
-            return false;
+            return null;
         }
 
-        public bool UpdateOrderInfo(string userId, int orderId)
+        public string DeclinePaymentInfo(int orderId)
         {
-            if (userId != null && orderId > 0)
+            if (orderId > 0)
             {
-                var order = _context.Orders.Where(o => o.UserId == userId && o.Id == o.Id).FirstOrDefault();
-                if (order != null)
-                {
-                    //order.status = PaymentStatus.Seen;
-                    order.DateCreated = DateTime.Now;
-                    order.Active = true;
-                    order.Deleted = false;
-
-                    _context.Orders.Update(order);
-                    _context.SaveChanges();
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public bool DeclinePaymentInfo(string userId, int orderId)
-        {
-            if (userId != null && orderId > 0)
-            {
-                var payment = _context.Payments.Where(x => x.OrderId == orderId && !x.Deleted).FirstOrDefault();
+                var payment = _context.Payments.Where(x => x.OrderId == orderId && !x.Deleted).Include(x=> x.Orders.User).FirstOrDefault();
                 if (payment != null)
                 {
                     payment.status = PaymentStatus.Declined;
 
+                    payment.Orders.OrderObject = JsonConvert.DeserializeObject<OrderItems[]>(payment.Orders.OrderDetails);
+                    SaveSalesRecord(payment.Orders);
+
                     _context.Payments.Update(payment);
                     _context.SaveChanges();
-                    return true;
+                    return payment.Orders.User.Email;
                 }
             }
-            return false;
+            return null;
         }
 
-        public bool DeclineOrderInfo(string userId, int orderId)
+        public async Task<bool> SaveSalesRecord(Order data)
         {
-            if (userId != null && orderId > 0)
+            if (data != null)
             {
-                var order = _context.Orders.Where(o => o.UserId == userId && o.Id == o.Id).FirstOrDefault();
-                if (order != null)
+                var sales = new List<SalesRecord>();
+                foreach (var order in data.OrderObject)
                 {
-                    //order.status = PaymentStatus.Declined;
-                    order.DateCreated = DateTime.Now;
-                    order.Active = true;
-                    order.Deleted = false;
-
-                    _context.Orders.Update(order);
-                    _context.SaveChanges();
-                    return true;
+                    var salesRecord = new SalesRecord()
+                    {
+                        FoodId = order.FoodId,
+                        OrderId = data.Id,
+                        Price = order.UnitPrice,
+                        RecordDate = data.DateCreated,
+                        Total = order.total,
+                        Quantity = order.Quantity,
+                        IsActive = true,
+                        IsDeleted = false,
+                    };
+                    sales.Add(salesRecord);
                 }
+                _context.SalesRecords.AddRange(sales);
+                return true;
             }
             return false;
         }
-
-
     }
 }
 

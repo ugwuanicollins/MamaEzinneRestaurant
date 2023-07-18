@@ -9,7 +9,7 @@ namespace Logic.IHelpers
 {
     public interface IEmailHelper
     {
-        void SendApprovalEmailToCustomer(ApplicationUser user);
-        void SendDeclinationEmailToCustomer(ApplicationUser user);
+        void SendApprovalEmailToCustomer(string email);
+        void SendDeclinationEmailToCustomer(string email);
     }
 }
