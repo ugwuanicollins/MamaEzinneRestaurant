@@ -38,6 +38,11 @@ function CreateOrder() {
 function GetUploadedEvidence()
 {
     debugger
+    const button = document.getElementById('uploadBtn');
+    var defaultBtn = button.innerHTML;
+    button.disabled = true;
+    var spinner = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Loading...';
+    button.innerHTML = spinner;
     var picture = document.getElementById("evidenceId").files[0];
     if (picture == undefined) {
 
@@ -60,15 +65,20 @@ function GetUploadedEvidence()
         success: function (result) {
             debugger;
             if (!result.isError) {
+                button.disabled = false;
+                button.innerHTML = defaultBtn;
                 var url = '/Order/Index?payId=' + result.payId;
                successAlertWithRedirect(result.msg, url); 
             }
             else {
+                button.disabled = false;
+                button.innerHTML = defaultBtn;
                 errorAlert(result.msg);
             }
         },
         error: function (ex) {
-
+            button.disabled = false;
+            button.innerHTML = defaultBtn;
             errorAlert(ex);
         }
     })

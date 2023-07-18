@@ -82,7 +82,7 @@
 
                 <!-- Modal body -->
                 <div class="modal-body" style="background-color:whitesmoke">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                     <h3 class="modal-title mb-3 text-center mb-3" style="font-size:50px;font-family:monserrt;color:red">Make Payment</h3>
@@ -135,7 +135,7 @@
                 <!-- Modal Header -->
                 <div class="modal-header p-3 bg-danger">
                     <h4 class="modal-title align-items-center  text-bold text-white" style="margin-left:210px"> Upload Evidence of Payment</h4>
-                    <button type="button" class="close text-dark" data-dismiss="modal">&times;</button>
+                    <button type="button" class="close text-dark" data-bs-dismiss="modal">&times;</button>
                 </div>
 
                 <!-- Modal body -->
@@ -143,7 +143,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <input class="form-control " id="evidenceId" type="file" />
-                            <a class="btn btn-lg btn-info mt-4" style="margin-left:320px" onclick="GetUploadedEvidence()">Submit</a>
+                            <a class="btn btn-lg btn-info mt-4" style="margin-left:320px" id="uploadBtn" onclick="GetUploadedEvidence()">Submit</a>
                         </div>
                     </div>
                 </div>

@@ -192,22 +192,18 @@ namespace FoodBar.Controllers
             {
                 if (foodViewModel.Name == null && string.IsNullOrEmpty(foodViewModel.Name))
                 {
-                    SetMessage("Name is Required", Message.Category.Error);
                     return View(model);
                 }
                 if (foodViewModel.Price <= 0)
                 {
-                    SetMessage("Price is Required", Message.Category.Error);
                     return View(model);
                 }
                 if (foodViewModel.Description == null && string.IsNullOrEmpty(foodViewModel.Description))
                 {
-                    SetMessage("Description is Required", Message.Category.Error);
                     return View(model);
                 }
                 if (foodViewModel.ImageUrl == null)
                 {
-                    SetMessage("Image is Required", Message.Category.Error);
                     return View(model);
                 }
                 var foods = _foodHelper.AdminAddFood(foodViewModel, user);
