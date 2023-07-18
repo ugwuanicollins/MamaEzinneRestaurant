@@ -40,9 +40,9 @@ namespace FoodBar.Controllers
         }
 
         [HttpGet]
-        public IActionResult PaymentTable(int OrderId,/*string evidence,*/ string userName)
+        public IActionResult PaymentTable(int payId)
         {
-            IEnumerable<Payment> payments = _context.Payments.Where(x => x.Id != 0 && !x.Deleted && x.Active)/*.Include(x => x.*User)*/;
+            IEnumerable<Payment> payments = _context.Payments.Where(x => x.Id != 0).Include(o => o.Orders);
             return View(payments);
         }
 
@@ -62,34 +62,31 @@ namespace FoodBar.Controllers
 
 
         [HttpPost]
-        public IActionResult Approve(string userId, int orderId)
+        public IActionResult Approve(int orderId)
         {
-            if (userId != null && orderId > 0)
+            if ( orderId > 0)
             {
-                var user = _userHelper.GetUserById(userId).Result;
-                if (user != null)
+                var paymentEmail = _userHelper.UpdatePaymentInfo(orderId);
+                if (paymentEmail != null)
                 {
-                    var paymentUpdate = _userHelper.UpdatePaymentInfo(userId, orderId);
-                    var orderUpdate = _userHelper.UpdateOrderInfo(userId, orderId);
-                    _emailHelper.SendApprovalEmailToCustomer(user);
+                    _emailHelper.SendApprovalEmailToCustomer(paymentEmail);
+                    return Json(new { isError = false, msg = "Payment is approve Successfully." });
                 }
-                return Json(new { isError = false, msg = "Payment is approve Successfully." });
             }
             return Json(new { isError = true, msg = "unable to approve payment." });
         }
 
-        public IActionResult Decline(string userId, int orderId)
+        public IActionResult Decline(int orderId)
         {
-            if (userId != null && orderId > 0)
+            if (orderId > 0)
             {
-                var user = _userHelper.GetUserById(userId).Result;
-                if (user != null)
+                    var declinePayment = _userHelper.DeclinePaymentInfo(orderId);
+                if (declinePayment != null)
                 {
-                    var declinePayment = _userHelper.DeclinePaymentInfo(userId,orderId);
-                    var declineOrder = _userHelper.DeclineOrderInfo(userId, orderId);
-                    _emailHelper.SendDeclinationEmailToCustomer(user);
+                    _emailHelper.SendDeclinationEmailToCustomer(declinePayment);
+                    return Json(new { isError = false, msg = "Payment is Declined." });
                 }
-                return Json(new { isError = false, msg = "Payment is Declined." });
+                 
             }
             return Json(new { isError = true, msg = "Error Occurred" });
         }
@@ -97,26 +94,25 @@ namespace FoodBar.Controllers
         [HttpGet]
         public IActionResult KeepRecord()
         {
-            ViewBag.foods = _foodHelper.GetFoodDropdown();
             var salesRecordViewModel = new List<SalesRecordViewModel>();
             var records = _context.SalesRecords.Where(s => s.FoodId > 0 && !s.IsDeleted)
-                .Include(s => s.Foods).ToList();
+                .Include(s => s.Foods).Include(s => s.Order.User).ToList();
             if (records.Any())
             {
                 foreach (var record in records)
                 {
                     var recordView = new SalesRecordViewModel() 
                     {
-                     FoodId = record.FoodId,
                      FoodName = record.Foods?.Name,
-                     RecordDate = record.RecordDate,
+                     Email = record.Order.User.Email,
+                     OrderNumber = record.Order.ReferenceNumber,
                      Price = record.Price,
                      Quantity = record.Quantity,
                      Total = record.Total,
+                     RecordDate = record.RecordDate,
                     };
                     salesRecordViewModel.Add(recordView);   
                 }
-                return View(salesRecordViewModel);
             }
             return View(salesRecordViewModel);
         }
@@ -174,29 +170,6 @@ namespace FoodBar.Controllers
                 }
             }
             return Json(new { isError = true, msg = "Please add food " });
-        }
-
-        [HttpPost]
-        public JsonResult SaveRecordTable(int foodId, double price, DateTime recordDate, string user, double total, int quantity)
-        {
-            try
-            {
-                if (foodId != 0)
-                {
-                    var salesRecord = _foodHelper.SaveSalesRecord(foodId,price,recordDate, user, total,quantity);
-                    if (salesRecord != null)
-                    {
-                        return Json(new { isError = false, msg = "SalesRecord was added Successfully." });
-                    }
-                    return Json(new { isError = true, msg = "Something went wrong." });
-                }
-                return Json(new { isError = true, msg = "Error Occured." });
-            }
-            catch (Exception exp)
-            {
-
-                throw exp;
-            }
         }
 
         [HttpGet]

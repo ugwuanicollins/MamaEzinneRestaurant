@@ -4,125 +4,128 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
+<div class="container-fluid" style="margin-top:120px">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-danger">Payment Table</h2>
+        </div>
+        <div class="col-6 text-end">
+            <a data-toggle="modal" data-target="#modals" class="btn  btn-danger mb-4 text-center text-white" style="width:15%;height:40px;border-radius:90px;margin-right:70px"><i class="bi bi-plus">Add Food</i></a>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        @if (Model.FoodList != null && Model.FoodList.Count() > 0)
+        {
+            <table id="myTable" class="table display  table-bordered table-condensed table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th class="text-center" scope="col" style="font-size:23px">S/N</th>
+                        <th class="text-center" scope="col" style="font-size:23px">Image</th>
+                        <th class="text-center" scope="col" style="font-size:23px">Name</th>
+                        <th class="text-center" scope="col" style="font-size:23px">Description</th>
+                        <th class="text-center" scope="col" style="font-size:23px">Price</th>
+                        <th class="text-center" scope="col" style="font-size:23px">Action</th>
+                    </tr>
+                </thead>
 
-
-    <div class="container-fluid mb-1 align-items-center" style="width:90%;margin-top:120px">
-        <div class="d-flex justify-content-center row">
-            <div class="col-md-11">
-                <div class="d-flex flex-row align-items-center mt-3 p-2 bg-white rounded">
-                    <div class="col-sm-6 mb-3 mb-m-1 mt-3 ">
-                        <h2 style="font-size:35px">ManageFood</h2>
-                    </div>
-                    <div class="col-sm-6 order-md-2 text-right mt-3">
-                        <a data-toggle="modal" data-target="#modals" class="btn btn-lg btn-danger text-center ml-auto text-white" style="width:35%;border-radius:90px;height:55px;float: right">Add Food</a>
-                    </div>
-                </div>
-                @if (Model.FoodList != null && Model.FoodList.Count() > 0)
-                {
-
+                <tbody>
                     @foreach (var food in Model.FoodList)
                     {
-                        <div class="d-flex flex-row justify-content-between align-items-center p-4 bg-white mt-3 px-4 rounded">
 
-                            <div class="mr-1"><img class="rounded" src="@food.Image" style="width:100%;height:150px"></div>
-                            <div class="d-flex align-items-center text-center">
-                                <span class="font-weight-bold" style="font-size:28px">@food.Name</span>
-                            </div>
-                            <div class="d-flex align-items-center text-center">
-                            <span class="font-weight-bold" style="font-size:28px">@food.Description</span>
-                           </div>
-                            <div>
-                                <h4 class="text-dark" style="font-size:30px">@food.Price</h4>
-                            </div>
-                            <div class="w-20 btn-group" role="group">
-                                <a class="btn btn-primary mx-2 text-center" data-toggle="modal" data-target="#itemModals" onclick="MapEditFood('@food.Id','@food.Name','@food.Price','@food.Description')">
-                                 <i class="bi bi-pencil-square"></i>
-                                </a>
-                                <a class="btn btn-danger text-center" href="#" onclick="DeleteFood('@food.Id')"><i class="bi bi-trash"></i></a>
-                            </div>
-                        </div>
+                      <tr class="table-secondary mt-4 text-center">
+                            <td width="1%"></td>
+                            <td width="5%" class="text-bold mt-2 align-items-center"><img class="rounded" src="@food.Image" style="width:200px;height:100px"></td>
+                            <td width="5%" class="text-bold mt-2 text-center">@food.Name</td>
+                            <td width="10%">@food.Description</td>
+                            <td width="3%">@food.Price</td>
+                            <td class="text-center mt-2" role="group" width="5%">
+                            <a class="btn btn-primary mx-2 text-center" data-toggle="modal" data-target="#itemModals" onclick="MapEditFood('@food.Id','@food.Name','@food.Price','@food.Description')">
+                            <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <a class="btn btn-danger text-center" href="#" onclick="DeleteFood('@food.Id')"><i class="bi bi-trash"></i></a>
+                            </td>
+                        </tr>
                     }
-                   
-                }
-                else
-                {
-                    <p>No Food Exits</p>
-                }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No Payment Exits</p>
+        }
 
-            </div>
-        </div>
     </div>
 
-<div class="modal" id="modals">
-    <div class="modal-dialog modal-dialog-centered vh-30" style="max-width:40%">
-        <div class="modal-content">
+    <div class="modal" id="modals">
+        <div class="modal-dialog modal-dialog-centered vh-30" style="max-width:40%">
+            <div class="modal-content">
 
-            <!-- Modal Header -->
-            <div class="modal-header p-3 bg-danger">
-                <h4 class="modal-title align-items-center  text-bold text-white" style="margin-left:230px">Add Food</h4>
-                <button type="button" class="close text-dark" data-dismiss="modal">&times;</button>
-            </div>
+                <!-- Modal Header -->
+                <div class="modal-header p-3 bg-danger">
+                    <h4 class="modal-title align-items-center  text-bold text-white" style="margin-left:310px">Add Food</h4>
+                    <button type="button" class="close text-dark" data-bs-dismiss="modal">&times;</button>
+                </div>
 
-            <!-- Modal body -->
-            <div class="modal-body">
+                <!-- Modal body -->
                 <div class="modal-body">
-                    <section class="signUp py-0">
-                        <form method="post" asp-action="ManageFood" asp-controller="Admin" enctype="multipart/form-data">
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            <h2 class="mb-2 mt-3  w-100 text-center text-danger " style="font-weight: bold;font-family: monserrat;font-size: 30px;margin-right:70px">Mama Ezinne Food</h2>
+                    <div class="modal-body">
+                        <section class="signUp py-0">
+                            <form method="post" asp-action="ManageFood" asp-controller="Admin" enctype="multipart/form-data">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <h2 class="mb-2 mt-3  w-100 text-center text-danger " style="font-weight: bold;font-family: monserrat;font-size: 30px;margin-right:70px">Mama Ezinne Food</h2>
 
-                            <div class="form-group mb-1 mr-0 row " style="display:flex;margin-right:60px">
-                                <label for="name" class="col-sm-12 col-form-label text-bold text-dark" style="font-weight:bold;">FoodName</label>
-                                <div class="col-sm-12">
-                                    <input class="form-control" type="text" name="name" asp-for="Name">
-                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                <div class="form-group mb-1 mr-0 row " style="display:flex;margin-right:60px">
+                                    <label for="name" class="col-sm-12 col-form-label text-bold text-dark" style="font-weight:bold;">FoodName</label>
+                                    <div class="col-sm-12">
+                                        <input class="form-control" type="text" name="name" asp-for="Name">
+                                        <span asp-validation-for="Name" class="text-danger"></span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group mb-1 mr-0 row " style="display:flex;margin-right:60px">
-                                <label asp-for="Image" class="col-sm-12 col-form-label text-bold text-dark" style="font-weight:bold;">Image</label>
-                                <div class="col-sm-12 custom-file">
-                                    <input class="form-control " asp-for="ImageUrl" style="width:100%" type="file" multiple />
-                                    <span asp-validation-for="Image" class="text-danger"></span>
+                                <div class="form-group mb-1 mr-0 row " style="display:flex;margin-right:60px">
+                                    <label asp-for="Image" class="col-sm-12 col-form-label text-bold text-dark" style="font-weight:bold;">Image</label>
+                                    <div class="col-sm-12 custom-file">
+                                        <input class="form-control " asp-for="ImageUrl" style="width:100%" type="file" multiple />
+                                        <span asp-validation-for="Image" class="text-danger"></span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group mb-1 mr-0 row " style="display:flex;margin-right:60px">
-                                <label for="price" class="col-sm-12 col-form-label text-bold text-dark" style="font-weight:bold;">Price</label>
-                                <div class="col-sm-12">
-                                    <input class="form-control" type="number" name="price" asp-for="Price">
-                                    <span asp-validation-for="Price" class="text-danger"></span>
+                                <div class="form-group mb-1 mr-0 row " style="display:flex;margin-right:60px">
+                                    <label for="price" class="col-sm-12 col-form-label text-bold text-dark" style="font-weight:bold;">Price</label>
+                                    <div class="col-sm-12">
+                                        <input class="form-control" type="number" name="price" asp-for="Price">
+                                        <span asp-validation-for="Price" class="text-danger"></span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group mb-1 mr-0 row " style="display:flex;margin-right:60px">
-                                <label for="message" class="col-sm-12 col-form-label text-bold text-dark" style="font-weight:bold;">Description</label>
-                                <div class="col-sm-12">
-                                    <textarea class="form-control" asp-for="Description" id="message" rows="5" cols="23"></textarea>
-                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                <div class="form-group mb-1 mr-0 row " style="display:flex;margin-right:60px">
+                                    <label for="message" class="col-sm-12 col-form-label text-bold text-dark" style="font-weight:bold;">Description</label>
+                                    <div class="col-sm-12">
+                                        <textarea class="form-control" asp-for="Description" id="message" rows="5" cols="23"></textarea>
+                                        <span asp-validation-for="Description" class="text-danger"></span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="mb-1  mt-2 text-center">
-                                <input type="submit" value="Submit" class="btn btn-danger text-bold" style="border-radius:90px;background-color: red; height: 3em; width: 30%; color: whitesmoke;margin-left:20px" />
-                            </div>
-                        </form>
-                    </section>
+                                <div class="mb-1  mt-2 text-center">
+                                    <input type="submit" value="Submit" class="btn btn-danger text-bold" style="border-radius:90px;background-color: red; height: 3em; width: 30%; color: whitesmoke;margin-left:20px" />
+                                </div>
+                            </form>
+                        </section>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="modal" id="edit_food">
-    <div class="modal-dialog modal-dialog-centered vh-30" style="max-width:40%">
-        <div class="modal-content">
+    <div class="modal" id="edit_food">
+        <div class="modal-dialog modal-dialog-centered vh-30" style="max-width:40%">
+            <div class="modal-content">
 
-            <!-- Modal Header -->
-            <div class="modal-header p-3 bg-danger">
-                <h4 class="modal-title align-items-center  text-bold text-white" style="margin-left:45%">Edit Food</h4>
-                <button type="button" class="close text-dark" data-dismiss="modal">&times;</button>
-            </div>
+                <!-- Modal Header -->
+                <div class="modal-header p-3 bg-danger">
+                    <h4 class="modal-title align-items-center  text-bold text-white" style="margin-left:45%">Edit Food</h4>
+                    <button type="button" class="close text-dark" data-bs-dismiss="modal">&times;</button>
+                </div>
 
-            <!-- Modal body -->
-            <div class="modal-body">
+                <!-- Modal body -->
                 <div class="modal-body">
-                    <section class="signUp py-0">
+                    <div class="modal-body">
+                        <section class="signUp py-0">
                             <h2 class="mb-2 mt-3  w-100 text-center text-danger " style="font-weight: bold;font-family: monserrat;font-size: 30px;margin-right:70px">Mama Ezinne Food</h2>
 
                             <div class="form-group mb-1 mr-0 row " style="display:flex;margin-right:60px">
@@ -141,24 +144,36 @@
                             <div class="form-group mb-1 mr-0 row " style="display:flex;margin-right:60px">
                                 <label for="price" class="col-sm-12 col-form-label text-bold text-dark" style="font-weight:bold;">Price</label>
                                 <div class="col-sm-12">
-                                    <input class="form-control" type="number" id="edit_price" name="price"/>
+                                    <input class="form-control" type="number" id="edit_price" name="price" />
                                 </div>
                             </div>
                             <div class="form-group mb-1 mr-0 row " style="display:flex;margin-right:60px">
                                 <label for="message" class="col-sm-12 col-form-label text-bold text-dark" style="font-weight:bold;">Description</label>
                                 <div class="col-sm-12">
-                                    <textarea class="form-control"  id="edit_description" rows="5" cols="23"></textarea>
+                                    <textarea class="form-control" id="edit_description" rows="5" cols="23"></textarea>
                                 </div>
                             </div>
                             <div class="mb-1  mt-2 text-center">
-                            <input type="submit" value="Submit" onclick="updateFood()" class="btn btn-danger text-bold" style="border-radius:90px;background-color: red; height: 3em; width: 30%; color: whitesmoke;margin-left:20px" />
+                                <input type="submit" value="Submit" onclick="updateFood()" class="btn btn-danger text-bold" style="border-radius:90px;background-color: red; height: 3em; width: 30%; color: whitesmoke;margin-left:20px" />
                             </div>
-                    </section>
+                        </section>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
 </div>
+
+
+
+
+
+
+<script>
+    $('#myTable').DataTable();
+
+</script>
 
 <style>
     .modal-backdrop {
@@ -166,19 +181,14 @@
         background-color: rgba(0, 0, 0, 0.5) !important; /* Set the desired background color */
     }
 
-    body {
-        font-family: 'Manrope', sans-serif;
-        background: #eee;
+    table {
+        counter-reset: row-counter;
     }
 
-    .input-box {
-        width: 80px;
+    tr > td:first-child:before {
+        counter-increment: row-counter;
+        content: counter(row-counter);
     }
 </style>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(".close").click(function () {
-        $("#edit_food").modal('hide');
-    });
-    </script>

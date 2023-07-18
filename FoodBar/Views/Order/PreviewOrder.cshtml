@@ -6,16 +6,16 @@
         <h3 id="payId" hidden></h3>
         <div class="row">
             <div class="col-md-6 text-left">
-                <p>Email: @Model?.Orders?.User?.Email</p>
+                <h3>Email: @Model?.Orders?.User?.Email</h3>
             </div>
-            <div class="col-md-6">
-                <p>OrderRef: @Model?.Orders?.ReferenceNumber</p>
+            <div class="col-md-6 text-end">
+                <h3>OrderRef: @Model?.Orders?.ReferenceNumber</h3>
             </div>
-            <div class="col-md-6 text-left">
-                <p>DatePaid: @Model?.DatePaid.ToShortDateString()</p>
+            <div class="col-md-6 text-left mt-2">
+                <h3>DatePaid: @Model?.DatePaid.ToShortDateString()</h3>
             </div>
-            <div class="col-md-6">
-                <p>PaymentStatus: @Model?.status</p>
+            <div class="col-md-6 text-end mt-2">
+                <h3>PaymentStatus: @Model?.status</h3>
             </div>
         </div>
         <table class="table mt-4 table-striped table-condensed table-striped table-bordered">
@@ -29,7 +29,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.Orders.RotaObject)
+                @foreach (var item in Model.Orders.OrderObject)
                 {
                     <tr>
                         <td></td>
@@ -41,7 +41,7 @@
                 }
             </tbody>
         </table>
-        <h3 class="text-end">GrandTotal: ₦ @Model.Orders.Amount</h3>
+        <h3 class="text-end">GrandTotal:₦ @Model.Orders.Amount </h3>
     </div>
 </div>
 

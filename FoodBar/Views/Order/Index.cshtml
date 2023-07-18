@@ -9,21 +9,21 @@
  <div class="text-center container-fluid" style="margin-top:120px">
      
 <div class="card col-12 mt-2">
-        <h2 class="mt-3">OrderDetails</h2>
+        <h1 class="mt-3  text-danger" style="margin-left:70px">OrderDetails</h1>
     <div class="card-body mt-2" style="font-size:30px">
         <h3 id="payId" hidden></h3>
         <div class="row">
             <div class="col-md-6 text-left">
                 <h3>Email: @Model?.Orders?.User?.Email</h3>
             </div>
-            <div class="col-md-6">
-                <p>OrderRef: @Model?.Orders?.ReferenceNumber</p>
+            <div class="col-md-6 text-end">
+                <h3>OrderRef: @Model?.Orders?.ReferenceNumber</h3>
             </div>
             <div class="col-md-6 text-left">
-                <p>DatePaid: @Model?.DatePaid.ToShortDateString()</p>
+                <h3 class="mt-2">DatePaid: @Model?.DatePaid.ToShortDateString()</h3>
             </div>
-            <div class="col-md-6">
-                <p>PaymentStatus: @Model?.status</p>
+            <div class="col-md-6 text-end">
+                <h3 class="mt-2">PaymentStatus: @Model?.status</h3>
             </div>
         </div>
         <table class="table mt-4 table-striped table-condensed table-striped table-bordered">
@@ -37,14 +37,14 @@
                 </tr>
             </thead>
             <tbody>
-                    @foreach(var item in Model.Orders.RotaObject)
+                    @foreach(var item in Model.Orders.OrderObject)
                     {
                         <tr>
                             <td></td>
                             <td class="text-left">@item?.Foods?.Name</td>
                             <td>@item?.Quantity</td>
-                            <td>@item?.UnitPrice</td>
-                            <td>@item?.total</td>
+                            <td>₦@item?.UnitPrice</td>
+                            <td>₦@item?.total</td>
                         </tr>
                     }
                 </tbody>
@@ -58,7 +58,7 @@
 <style>
     .card {
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.8);
-        max-width: 55%;
+        max-width: 60%;
         font-family: monserrat;
         border: 1px solid red;
         margin-left: 20%
