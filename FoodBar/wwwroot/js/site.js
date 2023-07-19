@@ -41,12 +41,13 @@ function GetUploadedEvidence()
     const button = document.getElementById('uploadBtn');
     var defaultBtn = button.innerHTML;
     button.disabled = true;
-    var spinner = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Loading...';
+    var spinner = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
     button.innerHTML = spinner;
     var picture = document.getElementById("evidenceId").files[0];
-    if (picture == undefined) {
+    if (picture == undefined ) {
 
         errorAlert("Upload image");
+     
         return;
     }
     var formData = new FormData();
