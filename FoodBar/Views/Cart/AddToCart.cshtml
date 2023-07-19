@@ -17,11 +17,6 @@
     }
 </style>
 
-
-
-
-
-
 <div class="container-fluid mb-1 align-items-center" style="width:90%;margin-top:120px">
     <div class="d-flex justify-content-center row">
         <div class="col-md-11">
@@ -59,7 +54,7 @@
                             <h4 id="total_@itemCount" class="text-dark" style="font-size:30px">@food.Price</h4>
                         </div>
                         <div class="d-flex align-items-center">
-                            <button class="btn mt-2 btn-remove"><i style="font-size:30px; color:red" class="bi bi-trash-fill" onclick="deleteCart(@itemCount)()"></i></button>
+                            <button class="btn mt-2 btn-remove"><i style="font-size:30px; color:red" class="bi bi-trash-fill" onclick="deleteCart(@itemCount, '@food.Id')"></i></button>
                             </div>
                     </div>
                 }
@@ -169,6 +164,13 @@ button{
 </style>
 
 <script>
+
+    $(document).ready(function () {
+        debugger;
+        $('#cart-item-count span').text('@Model?.Count');
+    });
+
+
     var numberOfFoods = @itemCount;
     var gToT = '@Model?.Sum(x => x.Price)';
     function increaseValue(id) {
@@ -233,7 +235,7 @@ button{
         document.getElementById("gdtotal").innerHTML = "GrandTotal: " + result;
     }   
 
-    function deleteCart(id){
+    function deleteCart(id, foodId){
         var result = 0; 
         debugger;
 
@@ -248,8 +250,9 @@ button{
                 result = result + x;
             }
         }
+        gToT = result;
         document.getElementById("gdtotal").innerHTML = "GrandTotal: " + result;
-  
+        updateCartItem(foodId);
     }
 
     function PreviewPaymentDetails() {
@@ -286,6 +289,7 @@ button{
         var btt = $("#counterInput_15").val();
         return btc;
     }
+    
 </script>
 
 

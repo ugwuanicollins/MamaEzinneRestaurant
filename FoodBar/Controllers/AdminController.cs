@@ -218,7 +218,7 @@ namespace FoodBar.Controllers
 
         public List<Food> GetAllFood()
         {
-            return _context.Foods.Where(x => x.Id != 0 && !x.IsDeleted).OrderByDescending(X => X.DateCreated).ToList();
+            return _context.Foods.Where(x => x.Id != 0 && !x.IsDeleted && x.IsActive ).OrderByDescending(X => X.DateCreated).ToList();
         }
 
         //Edit-GET
