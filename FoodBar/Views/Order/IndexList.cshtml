@@ -52,7 +52,7 @@
                                 <th class="text-center" scope="col" style="font-size:23px">RefNumber</th>
                                 <th class="text-center" scope="col" style="font-size:23px">OrderStatus</th>
                                 <th class="text-center" scope="col" style="font-size:23px">ViewOrder</th>
-                                <th class="text-center" scope="col" style="font-size:23px">payment Receipt</th>
+                                <th class="text-center" scope="col" style="font-size:23px">Receipt</th>
                             </tr>
                         </thead>
 
@@ -66,7 +66,7 @@
                                     <td width="25%" style="font-size:20px" id="amount">@item?.Orders?.ReferenceNumber</td>
                                     <td width="15%" style="font-size:20px" id="referenceNumber">@item?.status</td>
                                     <td width="25%" style="font-size:20px" id="datecreated"><a class="btn btn-lg btn-primary text-white" onclick="GetOrderPartialView(@item?.Id)">Orders</a></td>
-                                    <td width="25%" style="font-size:20px" id="datecreated">
+                                    <td width="25%" style="font-size:20px" id="status">
                                     @if (item?.status == PaymentStatus.Seen)
                                     {
                                     <a  class="btn btn-lg btn-primary" disabled>Re-upload Proof</a>

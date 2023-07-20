@@ -72,7 +72,7 @@
     </div>
     <!-- The Modal -->
     <div class="modal fade mt-1" id="modals">
-        <div class="modal-dialog" style="max-width:40%;margin-top:100px">
+        <div class="modal-dialog modal-lg" style="max-width:40%;margin-top:100px">
             <div class="modal-content">
 
                 <!-- Modal body -->
@@ -85,35 +85,35 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>AccountName</label>
-                                <input type="text" class="form-control-lg" id="accountNameId" disabled />
+                                <input type="text" class="form-control" id="accountNameId" disabled />
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>AccountNumber</label>
-                                <input type="number" id="accountNumberId" class="form-control-lg" disabled />
+                                <input type="number" id="accountNumberId" class="form-control" disabled />
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Bank Name</label>
-                                <input type="text" class="form-control-lg" id="bankNameId" disabled />
+                                <input type="text" class="form-control" id="bankNameId" disabled />
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Amount</label>
-                                <input type="number" id="amount" class="form-control-lg" required disabled />
+                                <input type="number" id="amount" class="form-control" required disabled />
                             </div>
                         </div>
                     </div>
 
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <a onclick="CreateOrder()" class="btn btn-lg btn-primary" style="margin-right:250px">Confirm Payment</a>
+                        <a onclick="CreateOrder()" class="btn btn-lg btn-primary" style="margin-right:280px">Confirm Payment</a>
                     </div>
 
                 </div>
@@ -279,8 +279,9 @@ button{
                 data.unitPrice = document.getElementById("unitPrice_" + i).innerHTML; // html//
                 data.total = document.getElementById("total_" + i).innerHTML;  // html//
                 data.foodId = $("#fdId_" + i).val(); // input //
+                orderObject.push(data);
             }
-            orderObject.push(data);
+            
        }
     }
 

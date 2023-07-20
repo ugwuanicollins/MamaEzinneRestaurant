@@ -282,7 +282,6 @@ function addToCart(foodId) {
     if (foodId != "") {
         if (!cartItems.includes(foodId)) {
             cartItems.push(foodId);
-            //var foodObject = localStorage.getItem("foodKey");
             localStorage.setItem("foodKey", JSON.stringify(cartItems));
             cartCount = cartItems.length;
             $('#cart-item-count span').text('');
