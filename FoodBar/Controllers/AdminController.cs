@@ -187,7 +187,7 @@ namespace FoodBar.Controllers
             model = foodViewModel;
             model.FoodList = GetAllFood();
 
-            var user = (User.Identity.Name);
+            var user = (User.Identity.Name);            
             if (user != null && foodViewModel != null && foodViewModel.Price > 0)
             {
                 if (foodViewModel.Name == null && string.IsNullOrEmpty(foodViewModel.Name))
@@ -251,7 +251,7 @@ namespace FoodBar.Controllers
             var res = _foodHelper.EditFood(model); 
             if (res)
             {
-                return Json(new { isError = false, msg = "Updated Successfully." });
+                return Json(new { isError = false, msg = "Food Updated Successfully." });
             }
             return Json(new { isError = true, msg = "Something went wrong." });
         }

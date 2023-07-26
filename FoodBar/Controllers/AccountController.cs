@@ -99,6 +99,7 @@ namespace FoodBar.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    //is test
                     var user = await _userHelper.FindByEmailAsync(model.Email).ConfigureAwait(false);
                     if (user != null)
                     {

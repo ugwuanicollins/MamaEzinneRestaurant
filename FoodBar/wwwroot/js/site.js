@@ -213,7 +213,7 @@ function updateFood() {
     data.price = $("#edit_price").val();
     data.desc = $("#edit_description").val();
 
-    var picture = document.getElementById("edit_image").files[0];
+    var picture = document.getElementById("edit_image").files[0]; //
     var formData = new FormData();
     formData.append("picture", picture);
     formData.append("id", data.id);

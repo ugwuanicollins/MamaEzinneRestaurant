@@ -137,16 +137,17 @@
         <div class="container-fluid d-flex align-items-center justify-content-between">
 
             <nav id="navbar" class="navbar text-dark mx-auto">
-                <a asp-action="Index" asp-controller="Admin" class=" d-flex ">
-                    <h1 style="font-family:monserrat;font-size:35px;color:black">Mama Ezinne Restaurant<span>.</span></h1>
-                </a>
+               
                 <ul>
+                    <li> <a asp-action="Index" asp-controller="Admin" class=" d-flex ">
+                    <h1 style="font-family:monserrat;font-size:35px;color:black">Mama Ezinne Restaurant<span>.</span></h1>
+                    </a></li>
                     <li><a asp-action="Index" asp-controller="Admin">Home</a></li>
                     <li><a href="#about">About</a></li>
                     <li><a asp-action="KeepRecord" asp-controller="Admin">Sales Record</a></li>
                     <li><a asp-controller="Admin" asp-action="ManageFood" class="text-bold text-white">Add New food</a></li>
                     <li><a asp-action="PaymentTable" asp-controller="Admin" class="text-white">Payment Record</a></li>
-                    <li><a class="mx-4" href="#contact">Contact</a></li>
+                    <li><a href="#contact">Contact</a></li>
 
 
                     @if (User.IsInRole("Admin"))
