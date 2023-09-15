@@ -139,24 +139,27 @@
         display:none;
     }
 </style>
-<body>
-    <!-- ======= Header ======= -->
-    <header id="header" class="header fixed-top d-flex align-items-center bg-danger">
-        <div class="container-fluid d-flex align-items-center justify-content-between">
 
+<body>
+    
+
+   <header id="header" class="header fixed-top d-flex align-items-center bg-danger">
+        <div class="container-fluid d-flex align-items-center justify-content-between mx-auto">
           
-            <div class="bi bi-menu" id="menu-icon" ></div>
             <nav id="navbar" class="navbar text-dark mx-auto">
-                <a asp-action="index" asp-area="" asp-controller="Home" class=" d-flex ">
-                    <h1 style="font-family:monserrat;font-size:35px;color:black">Mama Ezinne Restaurant<span>.</span></h1>
-                </a>
+                
                 <ul>
+                    <li>
+                        <a asp-action="index" asp-area="" asp-controller="Home" class=" d-flex ">
+                            <h1 style="font-family:monserrat;font-size:35px;color:black">Mama Ezinne Restaurant<span>.</span></h1>
+                        </a>
+                    </li>
                     <li><a class="home-active"  asp-action="index" asp-area="" asp-controller="Home">Home</a></li>
                     <li><a href="#menu">Menu</a></li>
                     <li><a href="#events">Events</a></li>
                     <li><a href="#chefs">Chefs</a></li>
                     <li><a href="#gallery">Gallery</a></li>
-                    <li><a class="mx-2" href="#contact">Contact</a></li>
+                    <li><a href="#contact">Contact</a></li>
                    
                     @if (User.Identity.IsAuthenticated)
                     {
@@ -176,7 +179,7 @@
                                 <button class="btn btn-link nav-link py-0 btn-lg-white" style="font-family:monserrat">Logout </button>
                             </form>
                         </li>
-                       @* <li><a style="font-family:monserrat;font-size:25px">Welcome  (@user)</a></li>*@
+                       @*<li><a style="font-family:monserrat;font-size:25px">Welcome  (@user)</a></li>*@
                     }
                     else
                     {
@@ -184,17 +187,12 @@
                             <a class="btn-loginhere text-bg-end" asp-area="" asp-controller="Account" asp-action="Login" style="background-color: #000; color:#fff; width:100px;height:90px;padding: 27px; font-family:monserrat">Login</a>
                         </li>
                     }
-
-
-                    <li>
-                        <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i>
-                        <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
-                    </li>
                 </ul>
                     
             </nav>
             <!-- .navbar -->
-           
+            <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i>
+            <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
             
 
         </div>
